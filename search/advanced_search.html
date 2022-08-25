@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <!--------- Mobile -------------->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!----------- CSS ----------->
+        <link rel="stylesheet" href="styles.css">
+        
+        <title>
+            Advanced Search
+        </title>
+    </head>
+    <body>
+        <div class="links">
+            <a href="index.html">Search</a>
+            <a href="imgsrch.html">Image Search</a>
+        </div>
+        
+        <h2>Advanced Search</h2>
+        
+        <hr>
+        
+        
+        <div class="advform">
+        
+            <form action="https://www.google.com/search" method="GET" name="f">
+                <div class="fpl">
+                    <span>Find pages with...</span>
+                </div>
+
+                <div>
+                    <div>
+                        <div class="labeldiv">
+                            <label>all these words...</label>
+                        </div>
+
+                        <input class="textbox" autocomplete="off" autofocus name="as_q" type="text">
+                    </div>
+
+                    <div>
+                        <div class="labeldiv">
+                            <label>this exact word or phrase:</label>
+                        </div>
+
+                        <input class="textbox" autocomplete="off" autofocus name="as_epq" type="text">
+                    </div>
+
+                    <div>
+                        <div class="labeldiv">
+                            <label>any of these words:</label>
+                        </div>
+
+                        <input class="textbox" autocomplete="off" autofocus name="as_oq" type="text">
+                    </div>
+
+                    <div>
+                        <div class="labeldiv">
+                            <label>none of these words:</label>
+                        </div>
+
+                        <input class="textbox" autocomplete="off" autofocus name="as_eq" type="text">
+                    </div>
+                    
+                    <div>
+                        <div class="labeldiv">
+                        </div>
+                        <div class="tbsd">
+                            <input id="advbtn" type="submit" value="Advanced Search">
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </form>
+            
+        </div>
+
+    </body>
+</html>

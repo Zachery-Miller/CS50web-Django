@@ -1,0 +1,142 @@
+body {
+    font-family: sans-serif;
+}
+
+.links {
+    width: 100%;
+    text-align: right;
+    margin-top: 20px;
+}
+
+.search {
+    margin-top:220px;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    padding: 10px;
+    font-size: 14px;
+}
+
+a:visited {
+    text-decoration: none;
+    color: dimgray;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 599px) {
+    .searchbar {
+        width: 300px;
+    }
+}
+
+@media (min-width: 600px) {
+    .searchbar {
+        width: 500px;
+    }
+
+}
+
+@media (max-width: 799px) {
+    .textbox, .tbsd {
+        width: 250px;
+    }
+}
+
+@media (min-width: 800px) {
+    .textbox, .tbsd {
+        width: 550px;
+    }
+}
+
+.searchbar {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 20px;
+    border: 1px solid;
+    border-color: grey;
+}
+
+.searchbar:hover {
+    box-shadow: grey;
+}
+
+.btns {
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin: 2px;
+    margin-top: 18px;
+    background-color: #fafafa;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: #2e2e2e;
+    border-radius: 5px;
+}
+
+.btns:hover {
+    border: 1px solid grey;
+}
+
+h2 {
+    color: #c91212;
+    font-weight: 100;
+    margin-left: 40px;
+}
+
+
+.labeldiv {
+    display: inline-block;
+    width: 140px;
+    margin-top: 15px;   
+}
+
+label {
+    font-size: 12px;    
+}
+
+.textbox, .tbsd {
+    padding: 6px;
+    margin: 8px;
+    display: inline-block;
+}
+
+.fpl {
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+.advform {
+    margin-left: 40px;
+    width: 800px;
+}
+
+.tbsd {
+    text-align: right;
+}
+
+#advbtn {
+    color: white;
+    background-color: dodgerblue;
+    font-weight: 800;
+    margin-right: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: 12px;
+    border: 1px solid;
+    border-color: darkblue;
+    border-radius: 2px;
+}
+
+#advbtn:hover {
+    background-color: darkblue;
+}
