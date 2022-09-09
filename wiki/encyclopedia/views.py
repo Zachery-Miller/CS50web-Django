@@ -1,11 +1,18 @@
 from http.client import HTTPResponse
 from django.shortcuts import render, HttpResponse, redirect
 from random import randint
+from django import forms
 
 from . import util
 import encyclopedia
 import markdown2
 
+class NewPageForm(forms.Form):
+    # title field
+    title = forms.CharField(label="Entry Title", max_length=100)
+
+    # textarea field
+    entry_content = forms.CharField(widget=forms.Textarea, label="Entry Markdown Content")
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -13,7 +20,26 @@ def index(request):
     })
 
 def newpage(request):
-    return render(request, "encyclopedia/newpage.html")
+    if request.method == "POST":
+        form = NewPageForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            content = form.cleaned_data["entry_content"]
+            util.save_entry(title, content)
+
+            entry = markdown2.markdown(util.get_entry(title))
+            return render(request, "encyclopedia/entry.html", {
+                "content": entry, "title": title
+            })
+
+        else:
+            return render(request, "encyclopedia/newpage.html", {
+                "form": form
+            })
+
+    return render(request, "encyclopedia/newpage.html", {
+        "form": NewPageForm()
+    })
 
 def randompage(request):
     # pull random entry from entries and convert markdown to HTML

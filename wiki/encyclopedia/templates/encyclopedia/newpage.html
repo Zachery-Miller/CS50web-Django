@@ -8,4 +8,10 @@
 
     <h1>Create a New Page here</h1>
 
+    <form action="{% url 'newpage' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit Entry">
+    </form>
+
 {% endblock %}
