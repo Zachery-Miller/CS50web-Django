@@ -21,7 +21,10 @@ def index(request):
 
 def newpage(request):
     if request.method == "POST":
+        # create form object with POST request data
         form = NewPageForm(request.POST)
+
+        # if all fields are entered properly save new file and send user to new page
         if form.is_valid():
             title = form.cleaned_data["title"]
             content = form.cleaned_data["entry_content"]
@@ -32,11 +35,13 @@ def newpage(request):
                 "content": entry, "title": title
             })
 
+        # if form validation fails, render the page again with data user input
         else:
             return render(request, "encyclopedia/newpage.html", {
                 "form": form
             })
 
+    # if accessed via GET
     return render(request, "encyclopedia/newpage.html", {
         "form": NewPageForm()
     })
