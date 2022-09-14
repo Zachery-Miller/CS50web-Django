@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
 INSTALLED_APPS = [
     'auctions',
     'django.contrib.admin',
