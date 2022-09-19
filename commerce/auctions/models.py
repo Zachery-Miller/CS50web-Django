@@ -1,4 +1,3 @@
-from unicodedata import category
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -10,22 +9,15 @@ class Listing(models.Model):
     # a listing object will have a title, description, starting bid, a user (who creates the listing), and optionally a category and/or image URL, and possibly comments
     title = models.CharField(max_length=100)
     description = models.TextField()
-    start_bid = models.DecimalField(max_digits=19, decimal_places=2)
+    price = models.DecimalField(max_digits=19, decimal_places=2, default=0.00)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
-
-    # make optional using blank=True
     category = models.CharField(max_length=64, blank=True)
-    image_URL = models.URLField(max_length=300, blank=True)
+    image_URL = models.URLField(blank=True)
+    active = models.BooleanField(default=True)
     
     def __str__(self):
         content = (
-            f"Listing id: {self.id}\n"
-            f"Title: {self.title}\n"
-            f"Description: {self.description}\n"
-            f"Starting Bid: {self.start_bid}\n"
-            f"Listing Creator: {self.creator}\n"
-            f"Category: {self.category}\n"
-            f"Image URL: {self.image_URL}"
+            f"Listing number: {self.id} -- Title: {self.title} -- Created By: {self.creator}"
         )
         return content
 
@@ -37,10 +29,7 @@ class Bid(models.Model):
     
     def __str__(self):
         content = (
-            f"Bid id: {self.id}\n"
-            f"Listing id: {self.listing.id}\n"
-            f"Bid amount: {self.bid_amount}\n"
-            f"Bidder: {self.bidder}"
+            f"{self.bidder} bid {self.bid_amount} on {self.listing}."
         )
         return content
 
@@ -52,22 +41,18 @@ class Comment(models.Model):
 
     def __str__(self):
         content = (
-            f"Comment id: {self.id}\n"
-            f"Listing id: {self.listing.id}\n"
-            f"Comment content: {self.comment}\n"
-            f"Commenter: {self.commenter}"
+            f"{self.commenter} commented {self.comment} on {self.listing}."
         )
         return content
- 
-class Watching(models.Model):
-    # a watching object will have a listing and a user
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watchers")
+
+
+class Watchlist(models.Model):
+    # a watchlist object will have a listing and a user
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
     watcher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watched_listings")
     
     def __str__(self):
         content = (
-            f"Watch id: {self.id}\n"
-            f"Listing id: {self.listing.id}\n"
-            f"Watcher id: {self.watcher}"
+            f"{self.listing} is being watched by {self.watcher}."
         )
         return content
