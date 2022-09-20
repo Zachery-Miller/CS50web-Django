@@ -4,21 +4,28 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.forms import ModelForm
 
-from .models import User
+from .models import User, Listing
+
+'''FORMS'''
+# listing form
+class NewListingForm(ModelForm):
+    class Meta:
+        model = Listing
+        fields = ['title', 'description', 'price', 'category', 'image_URL']
 
 # active listings page
 def index(request):
     return render(request, "auctions/index.html")
 
-@login_required
+@login_required(login_url="login")
 def create_listing(request):
     if request.method == "POST":
         pass
 
     else:
         return render(request, "auctions/new_listing.html")
-    pass
 
 def listing(request, listing_id):
     # break this into GET and POST sections
