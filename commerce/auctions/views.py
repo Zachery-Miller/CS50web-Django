@@ -19,11 +19,37 @@ class NewListingForm(ModelForm):
 def index(request):
     return render(request, "auctions/index.html")
 
-@login_required(login_url="login")
+@login_required(login_url="auctions:login")
 def create_listing(request):
     if request.method == "POST":
         form = NewListingForm(request.POST)
-        pass
+
+        # server-side form validation
+        if form.is_valid():
+            # get form data
+            title = form.cleaned_data["title"]
+            description = form.cleaned_data["description"]
+            price = form.cleaned_data["price"]
+            category = form.cleaned_data["category"]
+            image_URL = form.cleaned_data["image_URL"]
+
+            # save listing entry
+            new_listing = Listing(
+                title = title,
+                description = description,
+                price = price,
+                category = category,
+                image_URL = image_URL,
+                creator = User.objects.get(pk=request.user.id)
+            )
+
+        
+        # invalid form, refresh page with error msg
+        else:
+            return render(request, "auctions/new_listing.html", {
+                "form": form,
+                "message": "Form submission invalid. Please check all fields and resubmit."
+            })
 
     else:
         return render(request, "auctions/new_listing.html", {
@@ -56,7 +82,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("auctions:index"))
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
@@ -67,7 +93,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("auctions:index"))
 
 
 def register(request):
@@ -92,6 +118,6 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("auctions:index"))
     else:
         return render(request, "auctions/register.html")

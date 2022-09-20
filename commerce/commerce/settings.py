@@ -125,4 +125,4 @@ STATIC_URL = '/static/'
 
 
 # Login URL
-LOGIN_URL = 'login'
+LOGIN_URL = 'auctions:login'
