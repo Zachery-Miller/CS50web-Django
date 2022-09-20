@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -6,10 +7,33 @@ from django.urls import reverse
 
 from .models import User
 
-
+# active listings page
 def index(request):
     return render(request, "auctions/index.html")
 
+@login_required
+def create_listing(request):
+    if request.method == "POST":
+        pass
+
+    else:
+        return render(request, "auctions/new_listing.html")
+    pass
+
+def listing(request, listing_id):
+    # break this into GET and POST sections
+    # if signed in, be able to add/remove from watchlist
+    # if signed in, be able to bid - bid must be larger than current price. present error otherwise (reverse the page and add an error up top)
+    # if signed in and you are the user that created listing, be able to close listing (Listing.active = False)
+    # if listing is closed and user is signed in present whether or not they have won the auction
+    # if listing is active and if user is signed in allow comments to be added
+    pass
+
+def watchlist(request):
+    pass
+
+def categories(request):
+    pass
 
 def login_view(request):
     if request.method == "POST":

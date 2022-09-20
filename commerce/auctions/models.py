@@ -6,12 +6,25 @@ class User(AbstractUser):
     pass
 
 class Listing(models.Model):
+    # List of auction site categories to constrain new listings to these categories
+    CATEGORIES = [
+        ("MOT", "Motors"),
+        ("ART", "Collectibles & Art"),
+        ("ELE", "Electronics"),
+        ("H&G", "Home & Garden"),
+        ("C&A", "Clothing & Accessories"),
+        ("TOY", "Toys"),
+        ("SPG", "Sporting Goods"),
+        ("B&I", "Business & Industrial"),
+        ("J&W", "Jewelry & Watches")
+    ]
+
     # a listing object will have a title, description, starting bid, a user (who creates the listing), and optionally a category and/or image URL, and possibly comments
     title = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=19, decimal_places=2, default=0.00)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
-    category = models.CharField(max_length=64, blank=True)
+    category = models.CharField(max_length=3, choices=CATEGORIES, blank=True)
     image_URL = models.URLField(blank=True)
     active = models.BooleanField(default=True)
     
