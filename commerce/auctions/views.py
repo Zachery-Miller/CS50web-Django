@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.forms import ModelForm
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import User, Listing
 
@@ -67,11 +68,28 @@ def create_listing(request):
         })
 
 def listing(request, listing_id):
+    # check if listing exists
+    try:
+        listing = Listing.objects.get(pk=listing_id)
+
+    except ObjectDoesNotExist:
+        return render(request, "auctions/error.html", {
+            "code": 404,
+            "message": "Auction Does Not Exist"
+        })
+
+
+    # break this into GET and POST sections
+    # if signed in, be able to add/remove from watchlist
+    # if signed in, be able to bid - bid must be larger than current price. present error otherwise (reverse the page and add an error up top)
+    # if signed in and you are the user that created listing, be able to close listing (Listing.active = False)
+    # if listing is closed and user is signed in present whether or not they have won the auction
+    # if listing is active and if user is signed in allow comments to be added
     if request.method == "POST":    
         pass
 
     else:
-        listing = Listing.objects.get(pk=listing_id)
+        
         return render(request, "auctions/listing.html", {
             "listing": listing
         })
