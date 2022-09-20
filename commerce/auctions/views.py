@@ -22,10 +22,13 @@ def index(request):
 @login_required(login_url="login")
 def create_listing(request):
     if request.method == "POST":
+        form = NewListingForm(request.POST)
         pass
 
     else:
-        return render(request, "auctions/new_listing.html")
+        return render(request, "auctions/new_listing.html", {
+            "form": NewListingForm()
+        })
 
 def listing(request, listing_id):
     # break this into GET and POST sections
