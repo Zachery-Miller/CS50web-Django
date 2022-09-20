@@ -33,7 +33,7 @@ def create_listing(request):
             category = form.cleaned_data["category"]
             image_URL = form.cleaned_data["image_URL"]
 
-            # save listing entry
+            # create new listing instance
             new_listing = Listing(
                 title = title,
                 description = description,
@@ -42,6 +42,12 @@ def create_listing(request):
                 image_URL = image_URL,
                 creator = User.objects.get(pk=request.user.id)
             )
+
+            # save new listing
+            new_listing.save()
+
+            # return to homepage (WANT THIS TO BE USERS LISTINGS PAGE ONCE THAT IS COMPLETE)
+            return HttpResponseRedirect(reverse("auctions:index"))
 
         
         # invalid form, refresh page with error msg
