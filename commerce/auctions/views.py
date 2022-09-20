@@ -17,7 +17,11 @@ class NewListingForm(ModelForm):
 
 # active listings page
 def index(request):
-    return render(request, "auctions/index.html")
+    active_listings = Listing.objects.filter(active=True)
+
+    return render(request, "auctions/index.html",{
+        "active_listings": active_listings
+    })
 
 @login_required(login_url="auctions:login")
 def create_listing(request):
@@ -63,13 +67,14 @@ def create_listing(request):
         })
 
 def listing(request, listing_id):
-    # break this into GET and POST sections
-    # if signed in, be able to add/remove from watchlist
-    # if signed in, be able to bid - bid must be larger than current price. present error otherwise (reverse the page and add an error up top)
-    # if signed in and you are the user that created listing, be able to close listing (Listing.active = False)
-    # if listing is closed and user is signed in present whether or not they have won the auction
-    # if listing is active and if user is signed in allow comments to be added
-    pass
+    if request.method == "POST":    
+        pass
+
+    else:
+        listing = Listing.objects.get(pk=listing_id)
+        return render(request, "auctions/listing.html", {
+            "listing": listing
+        })
 
 def watchlist(request):
     pass
