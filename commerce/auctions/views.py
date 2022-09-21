@@ -105,7 +105,8 @@ def listing(request, listing_id):
         
         return render(request, "auctions/listing.html", {
             "listing": listing,
-            "form": NewBidForm()
+            "bid_form": NewBidForm(),
+            "comment_form": NewCommentForm()
         })
 
 def watchlist(request):
@@ -169,7 +170,48 @@ def new_bid(request, listing_id):
 
 
 def new_comment(request, listing_id):
-    pass
+    # check if listing exists
+    try:
+        listing = Listing.objects.get(pk=listing_id)
+
+    except ObjectDoesNotExist:
+        return render(request, "auctions/error.html", {
+            "code": 404,
+            "message": "Auction Does Not Exist"
+        })
+
+    # handle post request data    
+    if request.method == "POST":
+        form = NewCommentForm(request.POST)
+
+        # server-side form validation
+        if form.is_valid():
+            # get form data
+            comment = form.cleaned_data["comment"]
+        
+        # invalid form, refresh page --with error msg if possible
+        else:
+            return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
+
+        # create a new comment instance
+        new_comment = Comment(
+            listing = listing,
+            comment = comment,
+            commenter = User.objects.get(pk=request.user.id)
+        )
+
+        # save new comment
+        new_comment.save()
+
+        # return to listing page
+        return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
+
+    # handle improperly accessing route
+    if request.method == "GET":
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'GET' not allowed at this address."
+        })
 
 def login_view(request):
     if request.method == "POST":
