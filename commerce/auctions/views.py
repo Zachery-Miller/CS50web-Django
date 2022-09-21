@@ -1,3 +1,4 @@
+from xml.etree.ElementTree import Comment
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -7,7 +8,7 @@ from django.urls import reverse
 from django.forms import ModelForm
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import User, Listing
+from .models import Bid, User, Listing, Comment
 
 '''FORMS'''
 # listing form
@@ -15,6 +16,18 @@ class NewListingForm(ModelForm):
     class Meta:
         model = Listing
         fields = ['title', 'description', 'price', 'category', 'image_URL']
+
+# comment form
+class NewCommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment']
+
+# bid form
+class NewBidForm(ModelForm):
+    class Meta:
+        model = Bid
+        fields = ['bid_amount']
 
 # active listings page
 def index(request):
@@ -91,13 +104,71 @@ def listing(request, listing_id):
     else:
         
         return render(request, "auctions/listing.html", {
-            "listing": listing
+            "listing": listing,
+            "form": NewBidForm()
         })
 
 def watchlist(request):
     pass
 
 def categories(request):
+    pass
+
+def new_bid(request, listing_id):
+    # check if listing exists
+    try:
+        listing = Listing.objects.get(pk=listing_id)
+        current_price = listing.price
+
+    except ObjectDoesNotExist:
+        return render(request, "auctions/error.html", {
+            "code": 404,
+            "message": "Auction Does Not Exist"
+        })
+
+    # handle post request data    
+    if request.method == "POST":
+        form = NewBidForm(request.POST)
+
+        # server-side form validation
+        if form.is_valid():
+            # get form data
+            bid = form.cleaned_data["bid_amount"]
+        
+        # invalid form, refresh page --with error msg if possible
+        else:
+            return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
+
+        # bid is less than or equal to current price
+        if bid <= current_price:
+            return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
+        
+        # bid is greater than current price
+        elif bid > current_price:
+            # create a new bid instance
+            new_bid = Bid(
+                listing = listing,
+                bid_amount = bid,
+                bidder = User.objects.get(pk=request.user.id)
+            )
+
+            # save new bid and update current price
+            new_bid.save()
+            listing.price = bid
+            listing.save()
+
+            # return to listing page
+            return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
+
+    # handle improperly accessing route
+    if request.method == "GET":
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'GET' not allowed at this address."
+        })
+
+
+def new_comment(request, listing_id):
     pass
 
 def login_view(request):
