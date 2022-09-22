@@ -162,6 +162,13 @@ def close_listing(request, listing_id):
 
 
 def add_to_watchlist(request, listing_id):
+    # handle incorrect method
+    if request.method == "GET":
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'GET' not allowed at this address."
+        })
+
     # create new Watchlist instance
     watchlist = Watchlist(
         listing = Listing.objects.get(pk=listing_id),
@@ -176,6 +183,13 @@ def add_to_watchlist(request, listing_id):
 
 
 def remove_from_watchlist(request, listing_id):
+    # handle incorrect method
+    if request.method == "GET":
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'GET' not allowed at this address."
+        })
+
     # filter Watchlist objects
     watchlist = Watchlist.objects.filter(
         listing = Listing.objects.get(pk=listing_id),
@@ -190,7 +204,6 @@ def remove_from_watchlist(request, listing_id):
     
     # return to listing page
     return HttpResponseRedirect(reverse("auctions:listing", args=(int(listing_id),)))
-
 
 
 @login_required(login_url="auctions:login")
@@ -211,7 +224,45 @@ def watchlist(request):
     })
 
 def categories(request):
-    pass
+    # handle incorrect method
+    if request.method == "POST":
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'POST' not allowed at this address."
+        })
+
+    # get listing categories
+    categories = Listing.CATEGORIES
+
+    # show list of categories
+    return render(request, "auctions/categories.html", {
+        "categories": categories
+    })
+
+def category_search(request, category):
+    # handle incorrect method
+    if request.method == "POST":
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'POST' not allowed at this address."
+        })
+
+    # get listing categories
+    categories = Listing.CATEGORIES
+
+    # get listing code for filter
+    for i in categories:
+        if category.lower() == i[1].lower():
+            category_code = i[0]
+        else:
+            pass
+
+    # get active listings in category
+    listings = Listing.objects.filter(category=category_code, active=True)
+
+    return render(request, "auctions/filtered_listings.html", {
+        "listings": listings
+    })
 
 def new_bid(request, listing_id):
     # check if listing exists

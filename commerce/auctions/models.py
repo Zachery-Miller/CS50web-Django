@@ -30,7 +30,7 @@ class Listing(models.Model):
     
     def __str__(self):
         content = (
-            f"Listing number: {self.id} -- Title: {self.title} -- Created By: {self.creator}"
+            f"Title: {self.title}"
         )
         return content
 

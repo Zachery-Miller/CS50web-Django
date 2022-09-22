@@ -31,7 +31,7 @@
             <ul>Title: {{ listing.title }}</ul>
             <ul>Description: {{ listing.description }}</ul>
             <ul>Current Bid: {{ listing.price }}</ul>
-            <ul>Category: {{ listing.category }}</ul>
+            <ul>Category: {{ listing.get_category_display }}</ul>
         </div>
 
         {% if user.is_authenticated %}
