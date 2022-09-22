@@ -55,7 +55,7 @@ class Comment(models.Model):
 
     def __str__(self):
         content = (
-            f"{self.commenter} commented {self.comment} on {self.listing}."
+            f"{self.commenter} commented {self.comment}."
         )
         return content
 

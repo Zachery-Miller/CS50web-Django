@@ -33,6 +33,11 @@
             <ul>Current Bid: {{ listing.price }}</ul>
             <ul>Category: {{ listing.get_category_display }}</ul>
         </div>
+        <div>
+            {% for comment in comments %}
+                <ul> {{ comment }} </ul>
+            {% endfor %}
+        </div>
 
         {% if user.is_authenticated %}
         {% if user != listing.creator %}
