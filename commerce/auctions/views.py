@@ -108,9 +108,16 @@ def listing(request, listing_id):
             "bid_form": NewBidForm(),
             "comment_form": NewCommentForm()
         })
-
+        
+'''
+@login_required(login_url="auctions:login")
 def watchlist(request):
-    pass
+    watched_listings = Listing.objects.filter(active=True)
+
+    return render(request, "auctions/index.html",{
+        "active_listings": active_listings
+    })
+'''
 
 def categories(request):
     pass

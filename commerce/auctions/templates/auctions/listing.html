@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div>
+        <h2>Listing Information</h2>
+        <ul>Title: {{ listing.title }}</ul>
+        <ul>Description: {{ listing.description }}</ul>
+        <ul>Current Bid: {{ listing.price }}</ul>
+        <ul>Category: {{ listing.category }}</ul>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div>
+        <h2>Bid Form</h2>
+        <form action="{% url 'auctions:new_bid' listing.id %}" method="POST">
+            {% csrf_token %}
+            <div>
+                <label>Bid: </label>
+                {{ bid_form.bid_amount }}
+            </div>
+            <div>
+                <button type="submit">Place Bid</button>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <h2>Comment Form</h2>
+        <form action="{% url 'auctions:new_comment' listing.id %}" method="POST">
+            {% csrf_token %}
+            <div>
+                <label>Comment: </label>
+                {{ comment_form.comment }}
+            </div>
+            <div>
+                <button type="submit">Add Comment</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+
+{% endblock %}
