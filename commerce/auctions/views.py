@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.forms import ModelForm
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Bid, User, Listing, Comment
+from .models import Bid, User, Listing, Comment, Watchlist
 
 '''FORMS'''
 # listing form
@@ -81,6 +81,13 @@ def create_listing(request):
         })
 
 def listing(request, listing_id):
+    # handle improper method
+    if request.method == "POST":    
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'POST' not allowed at this address."
+        })
+
     # check if listing exists
     try:
         listing = Listing.objects.get(pk=listing_id)
@@ -91,24 +98,71 @@ def listing(request, listing_id):
             "message": "Auction Does Not Exist"
         })
 
+    # check if listing is active
+    if listing.active == True:
+        # check if user is logged in and get watchlist info
+        if request.user.is_authenticated:
+            watchlist = Watchlist.objects.filter(
+                listing = listing,
+                watcher = User.objects.get(pk=request.user.id)
+            ).first()
 
-    # break this into GET and POST sections
-    # if signed in, be able to add/remove from watchlist
-    # if signed in, be able to bid - bid must be larger than current price. present error otherwise (reverse the page and add an error up top)
-    # if signed in and you are the user that created listing, be able to close listing (Listing.active = False)
-    # if listing is closed and user is signed in present whether or not they have won the auction
-    # if listing is active and if user is signed in allow comments to be added
-    if request.method == "POST":    
-        pass
+            # check if item is on watchlist
+            if watchlist is not None:
+                watching = True
+            else:
+                watching = False
+        else:
+            watching = False
+        
+        # get comments
+        comments = Comment.objects.filter(listing=listing_id)
 
+    # if listing is closed
     else:
-        
-        return render(request, "auctions/listing.html", {
-            "listing": listing,
-            "bid_form": NewBidForm(),
-            "comment_form": NewCommentForm()
-        })
-        
+        pass
+        # return listing closed
+
+    # display page since GET was used
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "watching": watching,
+        "comments": comments,
+        "bid_form": NewBidForm(),
+        "comment_form": NewCommentForm()
+    })
+
+def add_to_watchlist(request, listing_id):
+    # create new Watchlist instance
+    watchlist = Watchlist(
+        listing = Listing.objects.get(pk=listing_id),
+        watcher = User.objects.get(pk=request.user.id)
+    )
+
+    # save
+    watchlist.save()
+
+    # return to listing page
+    return HttpResponseRedirect(reverse("auctions:listing", args=(int(listing_id),)))
+
+
+def remove_from_watchlist(request, listing_id):
+    # filter Watchlist objects
+    watchlist = Watchlist.objects.filter(
+        listing = Listing.objects.get(pk=listing_id),
+        watcher = User.objects.get(pk=request.user.id)
+    ).first()
+
+    # attempt to delete object
+    if watchlist is not None:
+        watchlist.delete()
+    else:
+        return HttpResponseRedirect(reverse("auctions:listing", args=(int(listing_id),)))
+    
+    # return to listing page
+    return HttpResponseRedirect(reverse("auctions:listing", args=(int(listing_id),)))
+
+
 '''
 @login_required(login_url="auctions:login")
 def watchlist(request):
