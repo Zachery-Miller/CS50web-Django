@@ -35,6 +35,7 @@
         </div>
 
         {% if user.is_authenticated %}
+        {% if user != listing.creator %}
         <div>
             <h2>Bid Form</h2>
             <form action="{% url 'auctions:new_bid' listing.id %}" method="POST">
@@ -48,6 +49,7 @@
                 </div>
             </form>
         </div>
+        {% endif %}
 
         <div>
             <h2>Comment Form</h2>
@@ -66,7 +68,17 @@
 
     <!--------------IF LISTING IS CLOSED SHOW THIS------------------->    
     {% else %}
-        <h2>This Auction Has Ended.</h2>
+        {% if user.is_authenticated %}
+            {% if user == highest_bid.bidder %}
+                <h2>Congratulations, you have won this auction!</h2>
+            {% elif user == listing.creator %}
+                <h2>You have ended this auction.</h2>
+            {% elif user != highest_bid.bidder %}
+                <h2>Sorry, you didn't win this auction...</h2>
+            {% endif %}
+        {% else %}
+            <h2>This Auction Has Ended.</h2>
+        {% endif %}
 
     {% endif %}
 {% endblock %}

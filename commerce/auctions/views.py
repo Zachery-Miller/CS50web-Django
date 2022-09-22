@@ -37,6 +37,14 @@ def index(request):
         "active_listings": active_listings
     })
 
+# completed listings page
+def completed_listings(request):
+    completed_listings = Listing.objects.filter(active=False)
+
+    return render(request, "auctions/completed_listings.html", {
+        "completed_listings": completed_listings
+    })
+
 @login_required(login_url="auctions:login")
 def create_listing(request):
     if request.method == "POST":
@@ -120,7 +128,13 @@ def listing(request, listing_id):
 
     # if listing is closed
     else:
-        return render(request, "auctions/listing.html")
+        # get highest bid
+        highest_bid = Bid.objects.filter(listing=listing).order_by('-bid_amount').first()
+
+        return render(request, "auctions/listing.html", {
+            "highest_bid": highest_bid,
+            "listing": listing
+        })
 
     # display page since GET was used
     return render(request, "auctions/listing.html", {
