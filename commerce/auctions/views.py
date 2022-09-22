@@ -305,7 +305,11 @@ def new_bid(request, listing_id):
 
         # bid is less than or equal to current price
         if bid <= current_price:
-            return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
+            return render(request, "auctions/error.html", {
+                "code": 400,
+                "message": "Your bid must be higher than the current price",
+                "listing": listing
+            })
         
         # bid is greater than current price
         elif bid > current_price:
@@ -323,6 +327,12 @@ def new_bid(request, listing_id):
 
             # return to listing page
             return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
+        
+        else:
+            return render(request, "auctions/error.html", {
+                "code": 500,
+                "message": "Sorry, something went wrong."
+            })
 
     # handle improperly accessing route
     if request.method == "GET":

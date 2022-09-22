@@ -5,4 +5,13 @@
         <h2>Error: {{ code }}</h2>
         <h4>{{ message }}</h4>
     </div>
+    {% if listing %}
+        <div>
+            <a href="{% url 'auctions:listing' listing.id %}">Go Back</a>
+        </div>
+    {% else %}
+        <div>
+            <a href="{% url 'auctions:index' %}">Home</a>
+        </div>
+    {% endif %}
 {% endblock %}
