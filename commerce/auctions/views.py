@@ -192,15 +192,23 @@ def remove_from_watchlist(request, listing_id):
     return HttpResponseRedirect(reverse("auctions:listing", args=(int(listing_id),)))
 
 
-'''
+
 @login_required(login_url="auctions:login")
 def watchlist(request):
-    watched_listings = Listing.objects.filter(active=True)
+    # handle incorrect method
+    if request.method == "POST":
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'POST' not allowed at this address."
+        })
+    
+    # get all watched listings
+    watchlist = Watchlist.objects.filter(watcher=request.user.id)
 
-    return render(request, "auctions/index.html",{
-        "active_listings": active_listings
+    # show watched listings
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": watchlist
     })
-'''
 
 def categories(request):
     pass

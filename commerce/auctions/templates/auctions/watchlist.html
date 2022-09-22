@@ -3,11 +3,11 @@
 {% block body %}
     <h2>Watched Listings</h2>
 
-    {% for listing in watchlist %}
-        <li>
-            <a href="{% url 'auctions:listing' listing.id %}">
-                {{ listing }}
-        </li>
+    {% for item in watchlist %}
+        <ul>
+            <a href="{% url 'auctions:listing' item.listing.id %}">
+                {{ item }}
+        </ul>
     {% endfor %}
 
 {% endblock %}
