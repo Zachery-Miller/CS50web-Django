@@ -1,57 +1,72 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    {% if user.is_authenticated %}
-        {% if watching %}
-            <form action="{% url 'auctions:remove_from_watchlist' listing.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">Remove From Watchlist</button>
-            </form>
-        {% else %}
-            <form action="{% url 'auctions:add_to_watchlist' listing.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">Add To Watchlist</button>
-            </form>
+    <!----------IF LISTING IS ACTIVE SHOW THIS------------->
+    {% if listing.active %}
+        {% if user.is_authenticated %}
+            {% if user != listing.creator %}
+                {% if watching %}
+                    <form action="{% url 'auctions:remove_from_watchlist' listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">Remove From Watchlist</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'auctions:add_to_watchlist' listing.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">Add To Watchlist</button>
+                    </form>
+                {% endif %}
+            {% elif user == listing.creator %}
+                <form action="{% url 'auctions:close_listing' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Close Listing</button>
+                </form>
+            {% else %}
+                
+            {% endif %}
         {% endif %}
+
+        <div>
+            <h2>Listing Information</h2>
+            <ul>Title: {{ listing.title }}</ul>
+            <ul>Description: {{ listing.description }}</ul>
+            <ul>Current Bid: {{ listing.price }}</ul>
+            <ul>Category: {{ listing.category }}</ul>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div>
+            <h2>Bid Form</h2>
+            <form action="{% url 'auctions:new_bid' listing.id %}" method="POST">
+                {% csrf_token %}
+                <div>
+                    <label>Bid: </label>
+                    {{ bid_form.bid_amount }}
+                </div>
+                <div>
+                    <button type="submit">Place Bid</button>
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <h2>Comment Form</h2>
+            <form action="{% url 'auctions:new_comment' listing.id %}" method="POST">
+                {% csrf_token %}
+                <div>
+                    <label>Comment: </label>
+                    {{ comment_form.comment }}
+                </div>
+                <div>
+                    <button type="submit">Add Comment</button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+    <!--------------IF LISTING IS CLOSED SHOW THIS------------------->    
+    {% else %}
+        <h2>This Auction Has Ended.</h2>
+
     {% endif %}
-
-    <div>
-        <h2>Listing Information</h2>
-        <ul>Title: {{ listing.title }}</ul>
-        <ul>Description: {{ listing.description }}</ul>
-        <ul>Current Bid: {{ listing.price }}</ul>
-        <ul>Category: {{ listing.category }}</ul>
-    </div>
-
-    {% if user.is_authenticated %}
-    <div>
-        <h2>Bid Form</h2>
-        <form action="{% url 'auctions:new_bid' listing.id %}" method="POST">
-            {% csrf_token %}
-            <div>
-                <label>Bid: </label>
-                {{ bid_form.bid_amount }}
-            </div>
-            <div>
-                <button type="submit">Place Bid</button>
-            </div>
-        </form>
-    </div>
-
-    <div>
-        <h2>Comment Form</h2>
-        <form action="{% url 'auctions:new_comment' listing.id %}" method="POST">
-            {% csrf_token %}
-            <div>
-                <label>Comment: </label>
-                {{ comment_form.comment }}
-            </div>
-            <div>
-                <button type="submit">Add Comment</button>
-            </div>
-        </form>
-    </div>
-    {% endif %}
-
-
 {% endblock %}

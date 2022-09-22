@@ -120,8 +120,7 @@ def listing(request, listing_id):
 
     # if listing is closed
     else:
-        pass
-        # return listing closed
+        return render(request, "auctions/listing.html")
 
     # display page since GET was used
     return render(request, "auctions/listing.html", {
@@ -131,6 +130,36 @@ def listing(request, listing_id):
         "bid_form": NewBidForm(),
         "comment_form": NewCommentForm()
     })
+
+def close_listing(request, listing_id):
+    # if accessed incorrectly via GET
+    if request.method == "GET":
+        return render(request, "auctions/error.html", {
+            "code": 405,
+            "message": "Request method 'GET' not allowed at this address."
+        })
+
+    # get listing object and current user attempting to close listing
+    listing = Listing.objects.get(pk=listing_id)
+    user = User.objects.get(pk=request.user.id)
+
+    # verify creator of listing is attempting to close listing
+    if user == listing.creator:
+        
+        # close listing and save
+        listing.active = False
+        listing.save()
+
+        # return to listing page
+        return HttpResponseRedirect(reverse("auctions:listing", args=(listing.id,)))
+    
+    # render error if creator of listing is not closing
+    else:
+        return render(request, "auctions/error.html", {
+            "code": 403,
+            "message": "Forbidden. You are not the creator of this listing."
+        })
+
 
 def add_to_watchlist(request, listing_id):
     # create new Watchlist instance
