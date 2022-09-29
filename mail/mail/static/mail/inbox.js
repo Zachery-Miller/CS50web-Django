@@ -39,8 +39,39 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(emails => {
-    console.log(emails)
 
+    emails.forEach(email => {
+      // create parent div
+      const preview = document.createElement('div');
+      preview.classList.add('email-preview');
+
+      // create child element for sender
+      const sender = document.createElement('strong');
+      sender.innerHTML = email["sender"];
+      preview.appendChild(sender);
+      
+      // create child element for subject
+      const subject = document.createElement('strong');
+      subject.innerHTML = email["subject"];
+      preview.appendChild(subject);
+
+      // create child element for timestamp
+      const timestamp = document.createElement('strong');
+      timestamp.innerHTML = email["timestamp"];
+      preview.appendChild(timestamp);
+
+      // add event listener
+      preview.addEventListener('click', function () {
+        console.log('This element has been clicked!');
+      })
+      // add email to emails view
+      document.querySelector('#emails-view').append(preview);
+    })
+  })
+}
+
+
+    /*
     // loop through and display emails in a new div element each time 
     for (let i = 0; i < emails.length; i++) {
       // create new div element and add subject line
@@ -56,6 +87,7 @@ function load_mailbox(mailbox) {
     }
   })
   }
+*/
 
   function send_email() {
     // get values from form
