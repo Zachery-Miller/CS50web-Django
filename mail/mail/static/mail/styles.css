@@ -3,7 +3,6 @@ textarea {
 }
 
 .email-preview {
-    background-color: white;
     border: 2px solid grey;
     margin: 2px;
 }
@@ -28,7 +27,15 @@ textarea {
     color: black;
     float: right;
     margin-right: 5px;
-}   
+}
+
+.email-read {
+    background-color: lightgrey;
+}
+
+.email-unread {
+    background-color: white;
+}
 
 #email-timestamp {
     float: right;

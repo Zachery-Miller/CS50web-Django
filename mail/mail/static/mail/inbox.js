@@ -46,6 +46,12 @@ function load_mailbox(mailbox) {
       // create parent div
       const preview = document.createElement('div');
       preview.classList.add('email-preview');
+      if (email.read === false) {
+        preview.classList.add('email-unread')
+      }
+      else {
+        preview.classList.add('email-read')
+      }
 
       // create child element for sender
       const sender = document.createElement('strong');
@@ -65,7 +71,7 @@ function load_mailbox(mailbox) {
       timestamp.classList.add('email-preview-timestamp');
       preview.appendChild(timestamp);
 
-      // add event listener
+      // if clicked read email
       preview.addEventListener('click', function(){ read_email(email); });
 
       // add email to emails view
@@ -107,6 +113,15 @@ function load_mailbox(mailbox) {
 
     // default open mail name
     document.querySelector('#read-view').innerHTML = `<h3>Now reading...</h3>`;
+
+    // mark as read
+    fetch(`/emails/${email.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        read: true
+      })
+    })
+    // add catch
 
     // create display for email info
     const sender = document.createElement('small');
