@@ -27,6 +27,26 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 }
 
+function compose_reply(email) {
+
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#read-container').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
+
+  // prepopulate composition fields
+  document.querySelector('#compose-recipients').value = `${email.sender}`;
+
+  if (email.subject.slice(0, 3) === "Re:") {
+    document.querySelector('#compose-subject').value = `${email.subject}`;
+  }
+  else {
+    document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+  }
+  
+  document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`;
+}
+
 function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
@@ -158,8 +178,8 @@ function load_mailbox(mailbox) {
 
     // show buttons based on mailbox
     if (mailbox === 'inbox') {
-      document.querySelector('#buttons-view').style.display = 'block';
-      document.querySelector('#archive-button').style.display = 'block';
+      document.querySelector('#buttons-view').style.display = 'inline-block';
+      document.querySelector('#archive-button').style.display = 'inline-block';
       document.querySelector('#unarchive-button').style.display = 'none';
     }
 
@@ -168,9 +188,9 @@ function load_mailbox(mailbox) {
     }
 
     else if (mailbox === 'archive') {
-      document.querySelector('#buttons-view').style.display = 'block';
+      document.querySelector('#buttons-view').style.display = 'inline-block';
       document.querySelector('#archive-button').style.display = 'none';
-      document.querySelector('#unarchive-button').style.display = 'block';
+      document.querySelector('#unarchive-button').style.display = 'inline-block';
     }
 
     else {
@@ -180,35 +200,39 @@ function load_mailbox(mailbox) {
     // add event listeners on archive buttons
     document.querySelector('#archive-button').addEventListener('click', function(){ archive_email(email); });
     document.querySelector('#unarchive-button').addEventListener('click', function(){ unarchive_email(email); });
+    document.querySelector('#reply-button').addEventListener('click', function(){ compose_reply(email); });
 
     // for debug
     console.log(`The id of this email is ${email.id}`);
   }
 
-  function archive_email(email) {
-    console.log(`you have clicked the archive button on email ${email.id}`) 
-    fetch(`/emails/${email.id}`, {
+  async function archive_email(email) {
+ 
+    await fetch(`/emails/${email.id}`, {
       method: 'PUT',
       body: JSON.stringify({
           archived: true
       })
     })
-    // add catch
+    .catch(error => console.log(error));
 
     // load user's inbox
     load_mailbox('inbox');
   }
 
-  function unarchive_email(email) {
-    console.log("you have clicked the unarchive button")
-    fetch(`/emails/${email.id}`, {
+  async function unarchive_email(email) {
+
+    await fetch(`/emails/${email.id}`, {
       method: 'PUT',
       body: JSON.stringify({
           archived: false
       })
     })
-    // add catch
+    .catch(error => console.log(error));
 
-    // load users inbox
+    // load user's inbox
     load_mailbox('inbox');
   }
+
+
+
