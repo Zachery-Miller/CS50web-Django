@@ -177,14 +177,38 @@ function load_mailbox(mailbox) {
       document.querySelector('#buttons-view').style.display = 'none';
     }
 
+    // add event listeners on archive buttons
+    document.querySelector('#archive-button').addEventListener('click', function(){ archive_email(email); });
+    document.querySelector('#unarchive-button').addEventListener('click', function(){ unarchive_email(email); });
+
     // for debug
     console.log(`The id of this email is ${email.id}`);
   }
 
-  function archive_email(email, mailbox) {
-    return false; 
+  function archive_email(email) {
+    console.log(`you have clicked the archive button on email ${email.id}`) 
+    fetch(`/emails/${email.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+          archived: true
+      })
+    })
+    // add catch
+
+    // load user's inbox
+    load_mailbox('inbox');
   }
 
-  function unarchive_email(email, mailbox) {
-    return false;
+  function unarchive_email(email) {
+    console.log("you have clicked the unarchive button")
+    fetch(`/emails/${email.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+          archived: false
+      })
+    })
+    // add catch
+
+    // load users inbox
+    load_mailbox('inbox');
   }
