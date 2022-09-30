@@ -18,7 +18,7 @@ function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
-  document.querySelector('#read-view').style.display = 'none';
+  document.querySelector('#read-container').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
@@ -32,7 +32,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
-  document.querySelector('#read-view').style.display = 'none';
+  document.querySelector('#read-container').style.display = 'none';
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -72,7 +72,7 @@ function load_mailbox(mailbox) {
       preview.appendChild(timestamp);
 
       // if clicked read email
-      preview.addEventListener('click', function(){ read_email(email); });
+      preview.addEventListener('click', function(){ read_email(email, mailbox); });
 
       // add email to emails view
       document.querySelector('#emails-view').append(preview);
@@ -105,11 +105,11 @@ function load_mailbox(mailbox) {
     return false;
   }
 
-  function read_email(email) {
+  function read_email(email, mailbox) {
     // Show read view and hide other views
     document.querySelector('#emails-view').style.display = 'none';
     document.querySelector('#compose-view').style.display = 'none';
-    document.querySelector('#read-view').style.display = 'block';
+    document.querySelector('#read-container').style.display = 'block';
 
     // default open mail name
     document.querySelector('#read-view').innerHTML = `<h3>Now reading...</h3>`;
@@ -156,5 +156,35 @@ function load_mailbox(mailbox) {
     // add display info to read-view
     document.querySelector('#read-view').append(subjectdiv, upperdiv, lowerdiv, pagebreak, body);
 
+    // show buttons based on mailbox
+    if (mailbox === 'inbox') {
+      document.querySelector('#buttons-view').style.display = 'block';
+      document.querySelector('#archive-button').style.display = 'block';
+      document.querySelector('#unarchive-button').style.display = 'none';
+    }
+
+    else if (mailbox === 'sent') {
+      document.querySelector('#buttons-view').style.display = 'none';
+    }
+
+    else if (mailbox === 'archive') {
+      document.querySelector('#buttons-view').style.display = 'block';
+      document.querySelector('#archive-button').style.display = 'none';
+      document.querySelector('#unarchive-button').style.display = 'block';
+    }
+
+    else {
+      document.querySelector('#buttons-view').style.display = 'none';
+    }
+
+    // for debug
     console.log(`The id of this email is ${email.id}`);
+  }
+
+  function archive_email(email, mailbox) {
+    return false; 
+  }
+
+  function unarchive_email(email, mailbox) {
+    return false;
   }
