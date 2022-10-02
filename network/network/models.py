@@ -11,6 +11,14 @@ class Post(models.Model):
     #auto_now will update timestamp every time model is saved, so when user edits post it will refresh the post to the top of the feed chronologically
     timestamp = models.DateTimeField(auto_now=True)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "poster": self.poster,
+            "content": self.content,
+            "timestamp": self.timestamp
+        }
+
 class Likes(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
     user = models.ForeignKey(User, on_delete=models.CASCADE)

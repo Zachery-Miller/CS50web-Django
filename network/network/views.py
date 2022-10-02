@@ -68,17 +68,19 @@ def register(request):
         return render(request, "network/register.html")
 
 
-def show_all_posts(request):
+def show_all_posts(request, page):
     # route can only be accessed via GET
     if request.method != "GET":
         return JsonResponse({"error": "GET method required."}, status=405)
 
     # get all posts that exist and return them in reverse chronological order
-    posts = Post.objects.all().order_by('-timestamp')
-    return JsonResponse([post.serialize() for post in posts], safe=False)
-
-def show_user_following_posts(request):
-    pass
+    if page == "all_posts":
+        posts = Post.objects.all().order_by('-timestamp')
+        return JsonResponse([post.serialize() for post in posts], safe=False)
+    elif page == "following_posts":
+        pass
+    else:
+        return JsonResponse({"error": "Not a valid page."}, status=400)
 
 def toggle_like(request):
     pass
