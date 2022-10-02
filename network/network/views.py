@@ -1,10 +1,15 @@
+import json
+from sqlite3 import Timestamp
+from django.core import serializers
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import User
+from .models import User, Post, Likes, Follow
 
 
 def index(request):
@@ -61,3 +66,46 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def show_all_posts(request):
+    # route can only be accessed via GET
+    if request.method != "GET":
+        return JsonResponse({"error": "GET method required."}, status=405)
+
+    # get all posts that exist and return them in reverse chronological order
+    posts = Post.objects.all().order_by('-timestamp')
+    return JsonResponse([post.serialize() for post in posts], safe=False)
+
+def show_user_following_posts(request):
+    pass
+
+def toggle_like(request):
+    pass
+
+def profile_page(request):
+    pass
+
+@csrf_exempt
+@login_required
+def new_post(request):
+    # route can only be accessed via POST
+    if request.method != "POST":
+        return JsonResponse({"error": "POST method required."}, status=405)
+
+    # load form data
+    data = json.loads(request.body)
+    content = data.get("content")
+
+    # if no content
+    if content == "":
+        return JsonResponse({"error": "Need content to submit to post."}, status=400)
+
+    # add post to db
+    post = Post(
+        poster=User.objects.get(pk=request.user.id),
+        content=content
+    )
+    post.save()
+    
+    return JsonResponse({"message": "successful post"}, status=201)

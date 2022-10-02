@@ -12,7 +12,7 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
 
 class Likes(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Follow(models.Model):
