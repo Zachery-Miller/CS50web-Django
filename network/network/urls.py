@@ -10,5 +10,6 @@ urlpatterns = [
     path("register", views.register, name="register"),
 
     # API Routes // Validate access to these routes can only be performed via POST
-    path("new_post", views.new_post, name="new_post")
+    path("new_post", views.new_post, name="new_post"),
+    path("show_posts/<str:page>", views.show_posts, name="show_posts")
 ]

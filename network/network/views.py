@@ -1,6 +1,5 @@
 import json
 from sqlite3 import Timestamp
-from django.core import serializers
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -68,7 +67,7 @@ def register(request):
         return render(request, "network/register.html")
 
 
-def show_all_posts(request, page):
+def show_posts(request, page):
     # route can only be accessed via GET
     if request.method != "GET":
         return JsonResponse({"error": "GET method required."}, status=405)
