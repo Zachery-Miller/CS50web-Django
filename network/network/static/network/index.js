@@ -63,10 +63,8 @@ function load_posts(page) {
 
             // create child div and element for poster
             const posterDiv = document.createElement('div');
-            const posterStrong = document.createElement('strong');
 
-            posterDiv.appendChild(posterStrong);
-            posterStrong.innerHTML = post["poster"];
+            posterDiv.innerHTML = `<a href="profile/${post["poster"]}">${post["poster"]}</a>`
             postDiv.appendChild(posterDiv);
 
             // create child div and element for content
@@ -92,6 +90,8 @@ function load_posts(page) {
             likesDiv.appendChild(likesStrong);
             likesStrong.innerHTML = `Likes: ${post["likes"]}`;
             postDiv.appendChild(likesDiv);
+
+            // create like button and add event listener
 
             // add post to posts view
             document.querySelector(`#${page}`).append(postDiv);

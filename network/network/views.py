@@ -92,8 +92,25 @@ def show_posts(request, page):
 def toggle_like(request):
     pass
 
-def profile_page(request):
+def toggle_follow(request):
     pass
+
+def profile_page(request, user):
+    # if accessed via GET
+    if request.method == "GET":
+        # try to find user
+        try:
+            profile_user = User.objects.get(username=user)
+        except User.DoesNotExist:
+            # want to probably return an error page here
+            return render(request, "network/error.html", {
+                "error": f"User '{user}' does not exist.",
+                "status": 404
+            })
+
+    return render(request, "network/profile.html", {
+        "profile_user": profile_user
+    })
 
 @csrf_exempt
 @login_required

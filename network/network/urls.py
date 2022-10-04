@@ -8,6 +8,7 @@ urlpatterns = [
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
+    path("profile/<str:user>", views.profile_page, name="profile"),
 
     # API Routes // Validate access to these routes can only be performed via POST
     path("new_post", views.new_post, name="new_post"),
