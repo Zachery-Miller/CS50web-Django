@@ -16,13 +16,15 @@ class Post(models.Model):
             "id": self.id,
             "poster": self.poster.username,
             "content": self.content,
-            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p")
+            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            "likes": self.likes.count()
         }
 
 class Likes(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_liked = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+    user_liking = models.ForeignKey(User, on_delete=models.CASCADE)
 
-class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
-    user_followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    following = models.ManyToManyField(User, related_name="following", blank=True)
+    followers = models.ManyToManyField(User, related_name="followers", blank=True)

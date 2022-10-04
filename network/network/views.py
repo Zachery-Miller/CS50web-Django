@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Post, Likes, Follow
+from .models import User, Post, Likes
 
 
 def index(request):
@@ -73,11 +73,14 @@ def show_posts(request, page):
         return JsonResponse({"error": "GET method required."}, status=405)
 
     # get all posts that exist and return them in reverse chronological order
-    if page == "all_posts":
+    if page == "all-posts":
         posts = Post.objects.all().order_by('-timestamp')
+
         return JsonResponse([post.serialize() for post in posts], safe=False)
-    elif page == "following_posts":
+
+    elif page == "following-posts":
         pass
+
     else:
         return JsonResponse({"error": "Not a valid page."}, status=400)
 
