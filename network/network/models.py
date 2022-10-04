@@ -20,7 +20,7 @@ class Post(models.Model):
             "likes": self.likes.count()
         }
 
-class Likes(models.Model):
+class Like(models.Model):
     post_liked = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
     user_liking = models.ForeignKey(User, on_delete=models.CASCADE)
 

@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Post, Likes
+from .models import User, Post, Like, Profile
 
 
 def index(request):
@@ -53,10 +53,15 @@ def register(request):
                 "message": "Passwords must match."
             })
 
-        # Attempt to create new user
+        # Attempt to create new user and profile
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
+
+            profile = Profile(
+                user=user
+            )
+            profile.save()
         except IntegrityError:
             return render(request, "network/register.html", {
                 "message": "Username already taken."
