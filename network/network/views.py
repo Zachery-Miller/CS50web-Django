@@ -102,14 +102,22 @@ def profile_page(request, user):
         try:
             profile_user = User.objects.get(username=user)
         except User.DoesNotExist:
-            # want to probably return an error page here
             return render(request, "network/error.html", {
                 "error": f"User '{user}' does not exist.",
                 "status": 404
             })
+        
+        # check if current user is following the profile user
+        active_user = User.objects.get(pk=request.user.id)
+
+        if Profile.objects.filter(following=profile_user).filter(followed_by=active_user).exists():
+            pass
+
 
     return render(request, "network/profile.html", {
-        "profile_user": profile_user
+        "profile_user": profile_user,
+        "following_count": profile_user.following.count(),
+        "follower_count": profile_user.followed_by.count()
     })
 
 @csrf_exempt

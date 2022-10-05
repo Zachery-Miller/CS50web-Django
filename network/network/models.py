@@ -24,7 +24,8 @@ class Like(models.Model):
     post_liked = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
     user_liking = models.ForeignKey(User, on_delete=models.CASCADE)
 
+# accessing related name from user object is in the reverse order
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    following = models.ManyToManyField(User, related_name="following", blank=True)
-    followers = models.ManyToManyField(User, related_name="followers", blank=True)
+    following = models.ManyToManyField(User, related_name="followed_by", blank=True)
+    followed_by = models.ManyToManyField(User, related_name="following", blank=True)
