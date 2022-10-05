@@ -92,8 +92,20 @@ def show_posts(request, page):
 def toggle_like(request):
     pass
 
-def toggle_follow(request):
-    pass
+def toggle_follow(request, user):
+    # GET active user and profile user info
+    if request.method == "GET":
+        active_user = User.objects.get(pk=request.user.id)
+        profile_user = User.objects.get(username=user)
+        profile_user_profile = Profile.objects.get(user=profile_user)
+
+        # check if any follow relationship exists in the direction (active_user -> profile_user)
+        if Profile.objects.filter(followed_by=active_user).filter(user=profile_user).exists():
+            # return following = True
+            return JsonResponse({"following": True}, status=200)
+        else:
+            # return following = False
+            return JsonResponse({"following": False}, status=200)
 
 def profile_page(request, user):
     # if accessed via GET
@@ -101,23 +113,17 @@ def profile_page(request, user):
         # try to find user
         try:
             profile_user = User.objects.get(username=user)
+            profile_user_profile = Profile.objects.get(user=profile_user)
         except User.DoesNotExist:
             return render(request, "network/error.html", {
                 "error": f"User '{user}' does not exist.",
                 "status": 404
             })
         
-        # check if current user is following the profile user
-        active_user = User.objects.get(pk=request.user.id)
-
-        if Profile.objects.filter(following=profile_user).filter(followed_by=active_user).exists():
-            pass
-
-
     return render(request, "network/profile.html", {
         "profile_user": profile_user,
-        "following_count": profile_user.following.count(),
-        "follower_count": profile_user.followed_by.count()
+        "following_count": profile_user_profile.user.following.count(),
+        "follower_count": profile_user_profile.followed_by.count()
     })
 
 @csrf_exempt
