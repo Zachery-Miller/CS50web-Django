@@ -92,12 +92,43 @@ def show_posts(request, page):
 def toggle_like(request):
     pass
 
+@csrf_exempt
 def toggle_follow(request, user):
+    # validate correct request method then determine follow or unfollow action
+    if request.method == "POST":
+        data = json.loads(request.body)
+        toggle = data.get("toggle")
+        profile_user = data.get("profile_user")
+        active_user = User.objects.get(pk=request.user.id)
+        profile_user_profile = Profile.objects.get(user=(User.objects.get(username=profile_user)))
+
+        # update follow relationship
+        if toggle == "follow":
+            profile_user_profile.followed_by.add(active_user)
+            profile_user_profile.save()
+
+            return JsonResponse({"message": f"Followed {profile_user}."}, status=201)
+
+        # delete follow relationship
+        else:
+            profile_user_profile.followed_by.remove(active_user)
+            profile_user_profile.save()
+
+            return JsonResponse({"message": f"Unfollowed {profile_user}."}, status=201)
+    
+    # if anything other than a POST request is used
+    else:
+        return render(request, "network/error.html", {
+                "error": "Method not allowed",
+                "status": 405
+            })
+
+def check_following(request, user):
     # GET active user and profile user info
     if request.method == "GET":
         active_user = User.objects.get(pk=request.user.id)
         profile_user = User.objects.get(username=user)
-        profile_user_profile = Profile.objects.get(user=profile_user)
+        # profile_user_profile = Profile.objects.get(user=profile_user)
 
         # check if any follow relationship exists in the direction (active_user -> profile_user)
         if Profile.objects.filter(followed_by=active_user).filter(user=profile_user).exists():
