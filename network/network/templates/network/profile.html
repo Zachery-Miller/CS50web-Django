@@ -1,0 +1,38 @@
+{% extends "network/layout.html" %}
+
+{% load static %}
+
+{% block body %}
+    {{ request.user.username|json_script:"user_username" }}
+    {{ profile_user.username|json_script:"profile_user_username" }}
+
+    <div>
+        {{ profile_user.username }}
+    </div>
+    <div>
+        Followers: {{ follower_count }}
+    </div>
+    <div>
+        Following: {{ following_count }}
+    </div>
+    {% if user.is_authenticated  %}
+        {% if profile_user != request.user %}
+        <div id="follow-unfollow">
+            <form id="follow-unfollow-form">
+                <button id="follow-button" style="display: none;">Follow</button>
+                <button id="unfollow-button" style="display: none;">Unfollow</button>
+            </form>
+        </div>
+        {% endif %}
+    {% endif %}
+    <div id="posts-div">
+        Posts go here
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    {% if user.is_authenticated %}
+        <script src="{% static 'network/profile.js' %}"></script>
+    {% endif %}
+{% endblock %}
