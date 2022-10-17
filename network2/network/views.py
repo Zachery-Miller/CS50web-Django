@@ -19,15 +19,25 @@ class NewPostForm(ModelForm):
             'content': Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
-def index(request):
-    # get all posts reverse chronological
-    posts = Post.objects.all().order_by('-time_posted')
 
-    return render(request, "network/index.html", {
+def home(request):
+    # get all posts reverse chronological from users the logged in user is following
+    active_user = User.objects.get(pk=request.user.id)
+    following_ids = active_user.follower.all().values_list('following', flat=True)
+    posts = Post.objects.filter(poster__id__in=following_ids).order_by('-time_posted')
+
+    return render(request, "network/home.html", {
         "form": NewPostForm(),
         "posts": posts
     })
 
+def explore(request):
+    # get all posts reverse chronological
+    posts = Post.objects.all().order_by('-time_posted')
+
+    return render(request, "network/explore.html", {
+        "posts": posts
+    })
 
 
 def login_view(request):
@@ -41,7 +51,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("home"))
         else:
             return render(request, "network/login.html", {
                 "message": "Invalid username and/or password."
@@ -52,7 +62,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("explore"))
 
 
 def register(request):
@@ -77,7 +87,7 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("home"))
     else:
         return render(request, "network/register.html")
 
@@ -103,4 +113,54 @@ def new_post(request):
         # save new post
         new_post.save()
 
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("home"))
+
+def profile_page(request, profile_user_username):
+    # get info about user whose profile is being viewed
+    profile_user = User.objects.get(username=profile_user_username)
+    following_count = Follow.objects.filter(follower=profile_user).count()
+    followed_by_count = Follow.objects.filter(following=profile_user).count()
+    posts = Post.objects.filter(poster=profile_user).order_by('-time_posted')
+
+    return render(request, "network/profile.html", {
+        "profile_user": profile_user,
+        "following": following_count,
+        "followers": followed_by_count,
+        "posts": posts
+    })
+
+def follow(request, profile_user_username):
+    following = User.objects.get(username=profile_user_username)
+    follower = User.objects.get(pk=request.user.id)
+
+    if Follow.objects.filter(follower=follower).filter(following=following).exists():
+        return JsonResponse({"message": "Already following user."}, status=406)
+    else:
+        new_follow = Follow.objects.create(follower=follower, following=following)
+        new_follow.save()
+
+        return HttpResponseRedirect(reverse("profile", args=(str(profile_user_username),)))
+
+
+def unfollow(request, profile_user_username):
+    following = User.objects.get(username=profile_user_username)
+    follower = User.objects.get(pk=request.user.id)
+
+    if Follow.objects.filter(follower=follower).filter(following=following).exists():
+        Follow.objects.filter(follower=follower).filter(following=following).first().delete()
+        return HttpResponseRedirect(reverse("profile", args=(str(profile_user_username),)))
+    else:
+        return JsonResponse({"message": "You aren't following this user."}, status=406)
+
+def check_follow_status(request):
+    pass
+
+def toggle_like(request, post_id):
+    
+    if Like.objects.filter(post__id=post_id).filter(user=User.objects.get(pk=request.user.id)).exists():
+        Like.objects.filter(post__id=post_id).filter(user=User.objects.get(pk=request.user.id)).first().delete()
+        return JsonResponse({"message": "Like removed"}, status=406)
+    else:
+        new_like = Like.objects.create(post = Post.objects.get(id=post_id), user = User.objects.get(pk=request.user.id))
+        new_like.save()
+        return JsonResponse({"message": "Like created"}, status=406)
