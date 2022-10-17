@@ -1,0 +1,25 @@
+{% extends "network/layout.html" %}
+
+{% load static %}
+
+{% block body %}
+    <!----Center a container with div-->
+    <div class="container">
+
+      {% for post in posts %}
+      <div class="card">
+          <div class="card-body">
+            <a href="{% url 'profile' post.poster.username %}"><h6 class="card-subtitle mb-2 text-muted">{{ post.poster }}</h6></a>
+            <h6 class="card-subtitle mb-2 text-muted">{{ post.time_posted }}</h6>
+            <p class="card-text">{{ post.content }}</p>
+            <!----update with like toggle function, include js and css animation to add/remove class-based styling on a timer/fade-->  
+            <a href="{% url 'explore' %}" class="card-link"><i class="fa fa-heart" style="font-size:24px;color:red"></i></a> 
+            <span id="like-count">{{ post.likes }}</span>
+          </div>
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+{% endblock %}

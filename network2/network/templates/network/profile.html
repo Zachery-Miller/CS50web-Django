@@ -1,0 +1,48 @@
+{% extends "network/layout.html" %}
+
+{% load static %}
+
+{% block body %}
+    <div class="container">
+
+        <div id="profile-section">
+            <h2>{{ profile_user.username }}</h2>
+            <h4>Followers {{ followers }}</h4>
+            <h4>Following {{ following }}</h4>
+            {% if user.is_authenticated %}
+                {% if user.id != profile_user.id %}
+                    <div>
+                        <form id="follow-form" action="{% url 'follow' profile_user.username %}" method="POST">
+                            {% csrf_token %}
+                                <button class="btn btn-primary" type="submit">Follow</button>
+                        </form>
+                        <form id="unfollow-form" action="{% url 'unfollow' profile_user.username %}" method="POST">
+                            {% csrf_token %}
+                                <button class="btn btn-danger" type="submit">Unfollow</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <hr>
+
+        <div id="user-posts">
+            {% for post in posts %}
+
+            <div class="card">
+                <div class="card-body">
+                  <a href="{% url 'profile' post.poster.username %}"><h6 class="card-subtitle mb-2 text-muted">{{ post.poster }}</h6></a>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ post.time_posted }}</h6>
+                  <p class="card-text">{{ post.content }}</p>
+                  <!----update with like toggle function, include js and css animation to add/remove class-based styling on a timer/fade-->  
+                  <a href="{% url 'home' %}" class="card-link"><i class="fa fa-heart" style="font-size:24px;color:red"></i></a> 
+                  <span id="like-count">{{ post.likes }}</span>
+                </div>
+            </div>
+      
+            {% endfor %}
+        </div>
+        
+    </div>
+{% endblock %}
