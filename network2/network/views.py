@@ -1,14 +1,33 @@
+import json
+from typing import Text
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.forms import ModelForm, Textarea
+from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import User, Post, Like, Follow
 
+# new post form
+class NewPostForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ['content']
+        widgets = {
+            'content': Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
 
 def index(request):
-    return render(request, "network/index.html")
+    # get all posts reverse chronological
+    posts = Post.objects.all().order_by('-time_posted')
+
+    return render(request, "network/index.html", {
+        "form": NewPostForm(),
+        "posts": posts
+    })
+
 
 
 def login_view(request):
@@ -61,3 +80,27 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+@login_required
+def new_post(request):
+    if request.method != "POST":
+        return JsonResponse({"message": "Incorrect method."}, status=405)
+
+    poster = User.objects.get(pk=request.user.id)
+    form = NewPostForm(request.POST)
+
+        # server-side form validation
+    if form.is_valid():
+        # get form data
+        content = form.cleaned_data["content"]
+
+        # create new post instance
+        new_post = Post(
+            poster = poster,
+            content = content
+        )
+
+        # save new post
+        new_post.save()
+
+    return HttpResponseRedirect(reverse("index"))
