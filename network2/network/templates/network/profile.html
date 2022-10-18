@@ -6,7 +6,7 @@
     <div class="container">
 
         <div id="profile-section">
-            <h2>{{ profile_user.username }}</h2>
+            <h2 id="profile-user">{{ profile_user.username }}</h2>
             <h4>Followers {{ followers }}</h4>
             <h4>Following {{ following }}</h4>
             {% if user.is_authenticated %}
@@ -45,4 +45,12 @@
         </div>
         
     </div>
+{% endblock %}
+
+{% block script %}
+    {% if user.is_authenticated %}
+        {% if user.id != profile_user.id %}
+            <script src="{% static 'network/profile.js' %}"></script>
+        {% endif %}
+    {% endif %}
 {% endblock %}

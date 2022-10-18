@@ -139,7 +139,7 @@ def follow(request, profile_user_username):
         new_follow = Follow.objects.create(follower=follower, following=following)
         new_follow.save()
 
-        return HttpResponseRedirect(reverse("profile", args=(str(profile_user_username),)))
+        return JsonResponse({"message": f"{follower} followed {following}."}, status=200)
 
 
 def unfollow(request, profile_user_username):
@@ -148,15 +148,24 @@ def unfollow(request, profile_user_username):
 
     if Follow.objects.filter(follower=follower).filter(following=following).exists():
         Follow.objects.filter(follower=follower).filter(following=following).first().delete()
-        return HttpResponseRedirect(reverse("profile", args=(str(profile_user_username),)))
+        return JsonResponse({"message": f"{follower} unfollowed {following}."}, status=200)
     else:
         return JsonResponse({"message": "You aren't following this user."}, status=406)
 
-def check_follow_status(request):
-    pass
+def check_follow_status(request, profile_user):
+    if request.method != "GET":
+        return JsonResponse({"message": "Incorrect method."}, status=405)
+
+    following = User.objects.get(username=profile_user)
+    follower = User.objects.get(pk=request.user.id)
+
+    if Follow.objects.filter(follower=follower).filter(following=following).exists():
+        return JsonResponse({"following": True}, status=200)
+    else:
+        return JsonResponse({"following": False}, status=200)
+    
 
 def toggle_like(request, post_id):
-    
     if Like.objects.filter(post__id=post_id).filter(user=User.objects.get(pk=request.user.id)).exists():
         Like.objects.filter(post__id=post_id).filter(user=User.objects.get(pk=request.user.id)).first().delete()
         return JsonResponse({"message": "Like removed"}, status=406)
