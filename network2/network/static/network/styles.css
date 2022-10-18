@@ -5,3 +5,8 @@
 #unfollow-form {
     display: none;
 }
+
+h4 {
+    display: inline-block;
+    margin-right: 5px;
+}

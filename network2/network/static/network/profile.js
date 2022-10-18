@@ -32,6 +32,9 @@ function follow(e) {
 
     // get profile user whose page you are viewing
     const profile_user = document.querySelector('#profile-user').textContent;
+
+    // get profile user follower count
+    let follower_count = parseInt(document.querySelector('#follower-count').innerHTML);
     
     //get csrf token from cookie
     const csrftoken = getCookie('csrftoken');
@@ -51,6 +54,10 @@ function follow(e) {
     // adjust button display
     document.querySelector('#follow-form').style.display = 'none';
     document.querySelector('#unfollow-form').style.display = 'block';
+
+    // edit follower count
+    follower_count += 1;
+    document.querySelector('#follower-count').innerHTML = follower_count;
 }
 
 function unfollow(e) {
@@ -58,6 +65,9 @@ function unfollow(e) {
 
     // get profile user whose page you are viewing
     const profile_user = document.querySelector('#profile-user').textContent;
+
+    // get profile user follower count
+    let follower_count = parseInt(document.querySelector('#follower-count').innerHTML);
 
     //get csrf token from cookie
     const csrftoken = getCookie('csrftoken');
@@ -77,6 +87,10 @@ function unfollow(e) {
     // adjust button display
     document.querySelector('#follow-form').style.display = 'block';
     document.querySelector('#unfollow-form').style.display = 'none';
+
+    // edit follower count
+    follower_count -= 1;
+    document.querySelector('#follower-count').innerHTML = follower_count;
 }
 
 function getCookie(name) {

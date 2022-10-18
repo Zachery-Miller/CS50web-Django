@@ -7,8 +7,15 @@
 
         <div id="profile-section">
             <h2 id="profile-user">{{ profile_user.username }}</h2>
-            <h4>Followers {{ followers }}</h4>
-            <h4>Following {{ following }}</h4>
+            <div>
+                <h4>Followers</h4>
+                <h4 id="follower-count">{{ followers }}</h4>
+            </div>
+            <div>
+                <h4>Following</h4>
+                <h4 id="following-count">{{ following }}</h4>
+            </div>
+            
             {% if user.is_authenticated %}
                 {% if user.id != profile_user.id %}
                     <div>
