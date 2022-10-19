@@ -164,12 +164,20 @@ def check_follow_status(request, profile_user):
     else:
         return JsonResponse({"following": False}, status=200)
     
-
+@login_required
 def toggle_like(request, post_id):
-    if Like.objects.filter(post__id=post_id).filter(user=User.objects.get(pk=request.user.id)).exists():
-        Like.objects.filter(post__id=post_id).filter(user=User.objects.get(pk=request.user.id)).first().delete()
-        return JsonResponse({"message": "Like removed"}, status=406)
+    post = Post.objects.get(id=post_id)
+
+    if Like.objects.filter(post=post).filter(user=request.user).exists():
+        like = Like.objects.filter(post=post).filter(user=request.user).first().delete()
+        post.likes -= 1
+        message = "Like removed"
+        
     else:
-        new_like = Like.objects.create(post = Post.objects.get(id=post_id), user = User.objects.get(pk=request.user.id))
-        new_like.save()
-        return JsonResponse({"message": "Like created"}, status=406)
+        like = Like.objects.create(post=post, user=request.user)
+        like.save()
+        post.likes += 1
+        message = "Like created"
+        
+    post.save()
+    return JsonResponse({"message": message}, status=200)

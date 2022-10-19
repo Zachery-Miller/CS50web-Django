@@ -25,9 +25,19 @@
             <a href="{% url 'profile' post.poster.username %}"><h6 class="card-subtitle mb-2 text-muted">{{ post.poster }}</h6></a>
             <h6 class="card-subtitle mb-2 text-muted">{{ post.time_posted }}</h6>
             <p class="card-text">{{ post.content }}</p>
-            <!----update with like toggle function, include js and css animation to add/remove class-based styling on a timer/fade-->  
-            <a href="{% url 'toggle_like' post.id %}" class="card-link"><i class="fa fa-heart" style="font-size:24px;color:red"></i></a> 
-            <span id="like-count">{{ post.likes }}</span>
+            <!----update with like toggle function, include js and css animation to add/remove class-based styling on a timer/fade-->
+
+            {% if user.is_authenticated %}
+              <form id="like-form-{{ post.id }}" action="{% url 'toggle_like' post.id %}" method="POST">
+                {% csrf_token %}
+                <i class="fa fa-heart" style="font-size:24px;color:red" data-id="{{ post.id }}"></i>
+                <span id="like-count-{{ post.id }}">{{ post.likes }}</span>
+              </form> 
+            {% else %}
+              <a href="{% url 'login' %}" class="card-link"><i class="fa fa-heart" style="font-size:24px;color:red"></i></a>
+              <span id="like-count-{{ post.id }}">{{ post.likes }}</span>
+            {% endif %}
+            
           </div>
       </div>
 
@@ -36,4 +46,8 @@
 
     </div>
 
+{% endblock %}
+
+{% block script %}
+  <script src="{% static 'network/like.js' %}"></script>
 {% endblock %}

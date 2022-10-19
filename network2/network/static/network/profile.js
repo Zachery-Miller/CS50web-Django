@@ -23,7 +23,6 @@ function set_button_visibilty() {
             document.querySelector('#unfollow-form').style.display = 'none';
         }
 })
-
 }
 
 function follow(e) {
