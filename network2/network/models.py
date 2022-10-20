@@ -9,9 +9,18 @@ class User(AbstractUser):
 class Post(models.Model):
     poster = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     content = models.CharField(max_length=280, verbose_name="Content")
-    # auto_now will update timestamp every time model is saved, so when user edits post it will refresh the post to the top of the feed chronologically
-    time_posted = models.DateTimeField(auto_now=True)
+    time_posted = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default=0)
+
+    def serialize_post(self, liked_by_active_user):
+        return {
+            "id": self.id,
+            "poster": self.poster.username,
+            "content": self.content,
+            "time_posted": self.time_posted.strftime("%b %d %Y, %I:%M %p"),
+            "likes": self.likes,
+            "liked_by_active_user": liked_by_active_user
+        }
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
