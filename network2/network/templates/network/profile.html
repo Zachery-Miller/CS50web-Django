@@ -39,7 +39,6 @@
             <div class="card">
                 <div class="card-body">
                   <a href="{% url 'profile' post.poster %}"><h6 class="card-subtitle mb-2 text-muted">{{ post.poster }}</h6></a>
-                  <span>{{ post.liked_by_active_user }}</span>
                   <h6 class="card-subtitle mb-2 text-muted">{{ post.time_posted }}</h6>
                   <p class="card-text">{{ post.content }}</p>
                   <!----update with like toggle function, include js and css animation to add/remove class-based styling on a timer/fade-->
