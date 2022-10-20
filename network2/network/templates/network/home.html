@@ -22,7 +22,8 @@
       {% for post in posts %}
       <div class="card">
           <div class="card-body">
-            <a href="{% url 'profile' post.poster.username %}"><h6 class="card-subtitle mb-2 text-muted">{{ post.poster }}</h6></a>
+            <a href="{% url 'profile' post.poster %}"><h6 class="card-subtitle mb-2 text-muted">{{ post.poster }}</h6></a>
+            <span>{{ post.liked_by_active_user }}</span>
             <h6 class="card-subtitle mb-2 text-muted">{{ post.time_posted }}</h6>
             <p class="card-text">{{ post.content }}</p>
             <!----update with like toggle function, include js and css animation to add/remove class-based styling on a timer/fade-->
@@ -30,11 +31,15 @@
             {% if user.is_authenticated %}
               <form id="like-form-{{ post.id }}" action="{% url 'toggle_like' post.id %}" method="POST">
                 {% csrf_token %}
-                <i class="fa fa-heart" style="font-size:24px;color:red" data-id="{{ post.id }}"></i>
+                {% if post.liked_by_active_user %}
+                  <i id="liked-{{ post.id }}" class="fa fa-heart heart" style="font-size:24px;color:red" data-id="{{ post.id }}"></i>
+                {% else %}
+                  <i id="liked-{{ post.id }}" class="fa fa-heart-o heart" style="font-size:24px" data-id="{{ post.id }}"></i>
+                {% endif %}
                 <span id="like-count-{{ post.id }}">{{ post.likes }}</span>
               </form> 
             {% else %}
-              <a href="{% url 'login' %}" class="card-link"><i class="fa fa-heart" style="font-size:24px;color:red"></i></a>
+              <a href="{% url 'login' %}" class="card-link"><i class="fa fa-heart-o" style="font-size:24px"></i></a>
               <span id="like-count-{{ post.id }}">{{ post.likes }}</span>
             {% endif %}
             

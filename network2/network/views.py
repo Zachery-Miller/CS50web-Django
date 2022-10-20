@@ -25,18 +25,20 @@ def home(request):
     active_user = User.objects.get(pk=request.user.id)
     following_ids = active_user.follower.all().values_list('following', flat=True)
     posts = Post.objects.filter(poster__id__in=following_ids).order_by('-time_posted')
+    serialized_posts = get_serialized(request, posts)
 
     return render(request, "network/home.html", {
         "form": NewPostForm(),
-        "posts": posts
+        "posts": serialized_posts
     })
 
 def explore(request):
     # get all posts reverse chronological
     posts = Post.objects.all().order_by('-time_posted')
+    serialized_posts = get_serialized(request, posts)
 
     return render(request, "network/explore.html", {
-        "posts": posts
+        "posts": serialized_posts
     })
 
 
@@ -121,12 +123,13 @@ def profile_page(request, profile_user_username):
     following_count = Follow.objects.filter(follower=profile_user).count()
     followed_by_count = Follow.objects.filter(following=profile_user).count()
     posts = Post.objects.filter(poster=profile_user).order_by('-time_posted')
+    serialized_posts = get_serialized(request, posts)
 
     return render(request, "network/profile.html", {
         "profile_user": profile_user,
         "following": following_count,
         "followers": followed_by_count,
-        "posts": posts
+        "posts": serialized_posts
     })
 
 def follow(request, profile_user_username):
@@ -181,3 +184,22 @@ def toggle_like(request, post_id):
         
     post.save()
     return JsonResponse({"message": message}, status=200)
+
+
+# non request-based or API functions
+def get_serialized(request, posts):
+
+    serialized_posts = []
+    for post in posts:
+        if request.user.is_authenticated:
+            if Like.objects.filter(user=request.user, post=post).exists():
+                liked = True
+            else:
+                liked = False
+        else:
+            liked = False
+        
+        serialized_post = post.serialize_post(liked)
+        serialized_posts.append(serialized_post)
+    
+    return serialized_posts

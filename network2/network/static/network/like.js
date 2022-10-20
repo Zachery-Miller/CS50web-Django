@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function getHearts() {
-    const hearts = document.querySelectorAll(".fa-heart")
+    const hearts = document.querySelectorAll(".heart")
     
     for (let i=0; i <hearts.length; i++) {
         hearts[i].addEventListener("click", () => submitForm(parseInt(hearts[i].dataset.id)))
@@ -28,12 +28,26 @@ function submitForm(post_id) {
             // decrease number of likes
             like_count -= 1;
             document.querySelector(`#like-count-${post_id}`).innerHTML = like_count;
+
+            // edit button display
+            like_button = document.querySelector(`#liked-${post_id}`)
+            like_button.classList.remove("fa-heart")
+            like_button.classList.add("fa-heart-o")
+            like_button.style = "font-size:24px";
+
             console.log(message);
         }
         else if (message["message"] === "Like created") {
             // increase number of likes
             like_count += 1;
             document.querySelector(`#like-count-${post_id}`).innerHTML = like_count;
+
+            // edit button display
+            like_button = document.querySelector(`#liked-${post_id}`)
+            like_button.classList.remove("fa-heart-o")
+            like_button.classList.add("fa-heart")
+            like_button.style = "font-size:24px;color:red";
+
             console.log(message);
         }
         else {
