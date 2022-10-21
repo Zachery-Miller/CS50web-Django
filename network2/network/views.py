@@ -93,7 +93,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-@login_required
+@login_required(login_url="login")
 def new_post(request):
     if request.method != "POST":
         return JsonResponse({"message": "Incorrect method."}, status=405)
@@ -101,7 +101,7 @@ def new_post(request):
     poster = User.objects.get(pk=request.user.id)
     form = NewPostForm(request.POST)
 
-        # server-side form validation
+    # server-side form validation
     if form.is_valid():
         # get form data
         content = form.cleaned_data["content"]
@@ -167,7 +167,7 @@ def check_follow_status(request, profile_user):
     else:
         return JsonResponse({"following": False}, status=200)
     
-@login_required
+@login_required(login_url="login")
 def toggle_like(request, post_id):
     post = Post.objects.get(id=post_id)
 
@@ -185,10 +185,37 @@ def toggle_like(request, post_id):
     post.save()
     return JsonResponse({"message": message}, status=200)
 
+@login_required(login_url="login")
+def edit_post(request, post_id): 
+    if request.method == "POST":
+        post = Post.objects.get(id=post_id)
+
+        # get data from post request
+        data = json.loads(request.body)
+        edited_content = data.get("new_content")
+
+        # update content and save post
+        post.content = edited_content
+        post.save()
+
+        return JsonResponse({"message": "Post has been edited."}, status=200)
+
+    else:
+        return JsonResponse({"message": "Incorrect method."}, status=405)
+
+@login_required(login_url="login")
+def delete_post(request, post_id): 
+    if request.method == "POST":
+        post = Post.objects.get(id=post_id)
+        post.delete()
+
+        return JsonResponse({"message": "Post has been deleted."}, status=200)
+
+    else:
+        return JsonResponse({"message": "Incorrect method."}, status=405)
 
 # non request-based or API functions
 def get_serialized(request, posts):
-
     serialized_posts = []
     for post in posts:
         if request.user.is_authenticated:
