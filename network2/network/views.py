@@ -115,7 +115,7 @@ def new_post(request):
         # save new post
         new_post.save()
 
-    return HttpResponseRedirect(reverse("home"))
+    return HttpResponseRedirect(reverse("profile", args=[poster.username]))
 
 def profile_page(request, profile_user_username):
     # get info about user whose profile is being viewed
