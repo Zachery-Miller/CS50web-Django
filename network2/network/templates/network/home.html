@@ -28,7 +28,7 @@
               <p id="post-content-{{ post.id }}" class="card-text">{{ post.content }}</p>
             </div>
             <div id="edit-content-div-{{ post.id }}" style="display:none">
-              <textarea id="textarea-{{ post.id }}" class="form-control" rows="3"></textarea>
+              <textarea id="textarea-{{ post.id }}" class="form-control" rows="3" maxlength="280"></textarea>
               <div>
                 <button id="save-edit-btn-{{ post.id }}" class="btn btn-primary">Save Edits</button>
                 <button id="cancel-edit-btn-{{ post.id }}" class="btn btn-primary">Cancel Edits</button>
