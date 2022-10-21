@@ -29,76 +29,83 @@
             </div>
             <div id="edit-content-div-{{ post.id }}" style="display:none">
               <textarea id="textarea-{{ post.id }}" class="form-control" rows="3" maxlength="280"></textarea>
-              <div>
+              <div class="post-edit-div">
                 <button id="save-edit-btn-{{ post.id }}" class="btn btn-primary">Save Edits</button>
-                <button id="cancel-edit-btn-{{ post.id }}" class="btn btn-primary">Cancel Edits</button>
+                <button id="cancel-edit-btn-{{ post.id }}" class="btn btn-secondary">Cancel</button>
               </div>
             </div>
             <!----update with like toggle function, include js and css animation to add/remove class-based styling on a timer/fade-->
-
+            
+            <div class="action-icons-div">
             {% if user.is_authenticated %}
-            <div style="display:inline-block">
-              <form id="like-form-{{ post.id }}" action="{% url 'toggle_like' post.id %}" method="POST">
-                  {% csrf_token %}
-                  {% if post.liked_by_active_user %}
-                    <i id="liked-{{ post.id }}" class="fa fa-heart heart" style="font-size:24px;color:red" data-id="{{ post.id }}"></i>
-                  {% else %}
-                    <i id="liked-{{ post.id }}" class="fa fa-heart-o heart" style="font-size:24px" data-id="{{ post.id }}"></i>
-                  {% endif %}
-                </form> 
-            </div>
-            <div style="display:inline-block">
-              {% if post.poster == request.user.username %}
-                  <i class="fa fa-pencil pencil" style="font-size:24px" aria-hidden="true" data-id="{{ post.id }}"></i>
-                  <i class="fa-solid fa-x delete-icon" style="font-size:24px" data-id="{{ post.id }}"></i>
+              <div style="display:inline-block">
+                <form id="like-form-{{ post.id }}" action="{% url 'toggle_like' post.id %}" method="POST">
+                    {% csrf_token %}
+                    {% if post.liked_by_active_user %}
+                      <i id="liked-{{ post.id }}" class="fa fa-heart heart action-icon" style="font-size:24px;color:red" data-id="{{ post.id }}"></i>
+                    {% else %}
+                      <i id="liked-{{ post.id }}" class="fa fa-heart-o heart action-icon" style="font-size:24px" data-id="{{ post.id }}"></i>
+                    {% endif %}
+                  </form> 
+              </div>
+              <div style="display:inline-block">
+                {% if post.poster == request.user.username %}
+                    <i class="fa fa-pencil pencil action-icon" style="font-size:24px" aria-hidden="true" data-id="{{ post.id }}"></i>
+                    <i class="fa-solid fa-x delete-icon action-icon" style="font-size:24px" data-id="{{ post.id }}"></i>
 
 
-              {% endif %}
-            </div>
-            <div>
-              <div style="display:inline-block;">
-                  <h6 class="card-subtitle mb-2 text-muted">Likes:</h6>
+                {% endif %}
               </div>
-              <div style="display:inline-block;">
-                  <span id="like-count-{{ post.id }}">{{ post.likes }}</span>
-              </div>
-            </div>
-            
-            
-            {% else %}
-              <a href="{% url 'login' %}" class="card-link"><i class="fa fa-heart-o" style="font-size:24px"></i></a>
               <div>
-                  <div style="display:inline-block;">
-                      <h6 class="card-subtitle mb-2 text-muted">Likes:</h6>
-                  </div>
-                  <div style="display:inline-block;">
-                      <span id="like-count-{{ post.id }}">{{ post.likes }}</span>
-                  </div>
+                <div style="display:inline-block;">
+                    <h6 class="card-subtitle mb-2 text-muted">Likes:</h6>
                 </div>
-            {% endif %}
+                <div style="display:inline-block;">
+                    <span id="like-count-{{ post.id }}">{{ post.likes }}</span>
+                </div>
+              </div>
+              
+              
+              {% else %}
+                <a href="{% url 'login' %}" class="card-link"><i class="fa fa-heart-o action-icon" style="font-size:24px"></i></a>
+                <div>
+                    <div style="display:inline-block;">
+                        <h6 class="card-subtitle mb-2 text-muted">Likes:</h6>
+                    </div>
+                    <div style="display:inline-block;">
+                        <span id="like-count-{{ post.id }}">{{ post.likes }}</span>
+                    </div>
+                  </div>
+              {% endif %}
+          </div>
             
           </div>
       </div>
 
       {% endfor %}
+      <div class="no-posts-div">
+        <h3 class="no-posts-msg"></h3>
+      </div>
 
-      <div class="pagination">
-        <span class="step-links">
-            {% if posts.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ posts.previous_page_number }}">previous</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
-            </span>
-    
-            {% if posts.has_next %}
-                <a href="?page={{ posts.next_page_number }}">next</a>
-                <a href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+      {% if posts %}
+        <div class="pagination">
+          <span class="step-links">
+              {% if posts.has_previous %}
+                  <a href="?page=1">&laquo; first</a>
+                  <a href="?page={{ posts.previous_page_number }}">previous</a>
+              {% endif %}
+      
+              <span class="current">
+                  Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+              </span>
+      
+              {% if posts.has_next %}
+                  <a href="?page={{ posts.next_page_number }}">next</a>
+                  <a href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
+              {% endif %}
+          </span>
+      </div>
+    {% endif %}
 
     </div>
 
@@ -107,5 +114,6 @@
 {% block script %}
   <script src="{% static 'network/like.js' %}"></script>
   <script src="{% static 'network/edit.js' %}"></script>
+  <script src="{% static 'network/home.js' %}"></script>
   <script src="{% static 'network/delete.js' %}"></script>
 {% endblock %}

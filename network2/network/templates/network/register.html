@@ -1,13 +1,10 @@
-{% extends "network/layout.html" %}
+<h2>Register</h2>
 
-{% block body %}
+{% if message %}
+    <div>{{ message }}</div>
+{% endif %}
 
-    <h2>Register</h2>
-
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-
+<div>
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
@@ -24,7 +21,8 @@
         </div>
         <input class="btn btn-primary" type="submit" value="Register">
     </form>
+</div>
 
+<div>
     Already have an account? <a href="{% url 'login' %}">Log In here.</a>
-
-{% endblock %}
+</div>

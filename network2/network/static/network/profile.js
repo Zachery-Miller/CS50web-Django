@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    checkPostExists_p();
     set_button_visibilty();
 
     document.getElementById('follow-form').addEventListener('submit', follow);
@@ -90,6 +91,15 @@ function unfollow(e) {
     // edit follower count
     follower_count -= 1;
     document.querySelector('#follower-count').innerHTML = follower_count;
+}
+
+function checkPostExists_p() {
+    if (document.querySelector(".card")) {
+        // pass
+    }
+    else {
+        document.querySelector('.no-posts-msg').innerHTML = "This user hasn't posted yet!";
+    }
 }
 
 function getCookie(name) {

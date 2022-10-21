@@ -1,3 +1,12 @@
+html {
+    background-color: #fafafa;
+}
+
+.body {
+    padding-top: 15px;
+    background-color: #fafafa;
+}
+
 #follow-form {
     display: none;
 }
@@ -11,6 +20,59 @@ h4 {
     margin-right: 5px;
 }
 
-.step-links {
-    margin: 0 auto;
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-posts-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-edit-div {
+    margin-top: 8px;
+    margin-bottom: 10px;
+}
+
+.action-icons-div {
+    margin-top: 5px;
+}
+
+.action-icon:hover {
+    cursor: pointer;
+}
+
+.card {
+    margin-bottom: 15px;
+}
+
+.card-link {
+    color: black;
+}
+
+.card-link:hover {
+    color: black;
+}
+
+.fa-heart-o:hover {
+    color: grey;
+}
+
+.pencil:hover {
+    color: grey;
+}
+
+.delete-icon:hover {
+    color: grey;
+}
+
+.icon {
+    margin-right: 3px;
+}
+
+.icon-right {
+    margin-left: 1px;
 }
