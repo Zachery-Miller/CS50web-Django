@@ -10,3 +10,7 @@ h4 {
     display: inline-block;
     margin-right: 5px;
 }
+
+.step-links {
+    margin: 0 auto;
+}

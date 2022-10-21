@@ -7,6 +7,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.forms import ModelForm, Textarea
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from .models import User, Post, Like, Follow
 
@@ -27,9 +28,12 @@ def home(request):
     posts = Post.objects.filter(poster__id__in=following_ids).order_by('-time_posted')
     serialized_posts = get_serialized(request, posts)
 
+    # set up pagination
+    page_obj = set_pagination(request, serialized_posts)
+
     return render(request, "network/home.html", {
         "form": NewPostForm(),
-        "posts": serialized_posts
+        "posts": page_obj
     })
 
 def explore(request):
@@ -37,8 +41,11 @@ def explore(request):
     posts = Post.objects.all().order_by('-time_posted')
     serialized_posts = get_serialized(request, posts)
 
+    # set up pagination
+    page_obj = set_pagination(request, serialized_posts)
+
     return render(request, "network/explore.html", {
-        "posts": serialized_posts
+        "posts": page_obj
     })
 
 
@@ -125,11 +132,14 @@ def profile_page(request, profile_user_username):
     posts = Post.objects.filter(poster=profile_user).order_by('-time_posted')
     serialized_posts = get_serialized(request, posts)
 
+    # set up pagination
+    page_obj = set_pagination(request, serialized_posts)
+
     return render(request, "network/profile.html", {
         "profile_user": profile_user,
         "following": following_count,
         "followers": followed_by_count,
-        "posts": serialized_posts
+        "posts": page_obj
     })
 
 def follow(request, profile_user_username):
@@ -230,3 +240,10 @@ def get_serialized(request, posts):
         serialized_posts.append(serialized_post)
     
     return serialized_posts
+
+def set_pagination(request, posts):
+    p = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = p.get_page(page_number)
+
+    return page_obj
