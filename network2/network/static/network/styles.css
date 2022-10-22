@@ -93,3 +93,54 @@ h4 {
     margin-top: 5px;
     text-align: right;
 }
+
+.current {
+    padding-bottom: 20px;
+}
+
+.col-pad {
+    background-color: #fafafa;
+}
+
+.sign-up-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 35px;
+}
+
+.lb {
+    margin-top: -10px;
+}
+
+.title-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+
+.login-box {
+    margin-top: 200px;
+}
+
+.login_div {
+    border: 1px solid lightgrey; 
+}
+
+.login-form-div {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.form-break {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.error-msg {
+    margin-bottom: 7px;
+    color: #ff5500;
+    font-weight: bold;
+}

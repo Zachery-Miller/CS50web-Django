@@ -1,28 +1,54 @@
-<h2>Register</h2>
+{% load static %}
 
-{% if message %}
-    <div>{{ message }}</div>
-{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Social Network</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container-fluid login-box">
+            <div class="row">
+                <div class="col col-pad">
 
-<div>
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
-</div>
+                </div>
+                <div class="col login_div">
+                    <div class="title-div">
+                        <h2>Network</h2>
+                    </div>
+                    
+        
+                    <div class="login-form-div">
+                        {% if message %}
+                        <div class="form-group error-msg">{{ message }}</div>
+                        {% endif %}
+                        <form action="{% url 'register' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+                            </div>
+                            <div class="form-group lb">
+                                <input class="form-control" type="email" name="email" placeholder="Email Address">
+                            </div>
+                            <div class="form-group lb">
+                                <input class="form-control" type="password" name="password" placeholder="Password">
+                            </div>
+                            <div class="form-group lb">
+                                <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+                            </div>
+                            <input class="btn btn-primary form-control" type="submit" value="Register">
+                        </form>
+                        <hr class="form-break">
+                        <div class="sign-up-div">
+                            Already have an account? <a href="{% url 'login' %}">&nbsp;Log in</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-pad">
 
-<div>
-    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
-</div>
+                </div>
+            </div>
+        </div> 
+    </body>
+</html>

@@ -1,23 +1,47 @@
-<h2>Login</h2>
+{% load static %}
 
-{% if message %}
-    <div>{{ message }}</div>
-{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Social Network</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'network/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container-fluid login-box">
+            <div class="row">
+                <div class="col col-pad">
 
-<div>
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-    </form>
-</div>
+                </div>
+                <div class="col login_div">
+                    <div class="title-div">
+                        <h2>Network</h2>
+                    </div>
+                        
+                    <div class="login-form-div">
+                        {% if message %}
+                        <div class="form-group error-msg">{{ message }}</div>
+                        {% endif %}
+                        <form action="{% url 'login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input autofocus class="form-control" type="text" name="username" placeholder="Username">
+                            </div>
+                            <div class="form-group lb">
+                                <input class="form-control" type="password" name="password" placeholder="Password">
+                            </div>
+                            <input class="form-control btn btn-primary" type="submit" value="Log in">
+                        </form>
+                        <hr class="form-break">
+                        <div class="sign-up-div">
+                            Don't have an account? <a href="{% url 'register' %}">&nbsp;Sign up</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-pad">
 
-<div>
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
-</div>
-
+                </div>
+            </div>
+        </div>        
+    </body>
+</html>

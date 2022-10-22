@@ -41,8 +41,6 @@ function showForm(post_id) {
     const remaining = MAX_CHARS - postTextArea.value.length;
     remainingChars.innerHTML = `${remaining} characters remaining`;
 
-    console.log(post_id)
-
     // add event listener on save edits button and submit post req
     document.querySelector(`#save-edit-btn-${post_id}`).addEventListener('click', () => {
         // get edited content
