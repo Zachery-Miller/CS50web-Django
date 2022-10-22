@@ -76,3 +76,20 @@ h4 {
 .icon-right {
     margin-left: 1px;
 }
+
+.prf-follow-div {
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.post-btn {
+    margin-top: 10px;
+}
+
+.remaining-char-label {
+    color: #ff5500;
+    font-weight: bold;
+    margin-top: 5px;
+    text-align: right;
+}

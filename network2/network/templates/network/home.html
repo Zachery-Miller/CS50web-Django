@@ -13,7 +13,8 @@
                 <div id="post-content">
                   {{ form.content }}
                 </div>
-                <button type="submit" id="new-post-btn" class="btn btn-primary">Post</button>
+                <div id="remaining-chars" class="remaining-char-label">280 characters remaining</div>
+                <button type="submit" id="new-post-btn" class="btn btn-primary post-btn">Post</button>
             </div>
         </form>
         <hr>
@@ -115,5 +116,5 @@
   <script src="{% static 'network/like.js' %}"></script>
   <script src="{% static 'network/edit.js' %}"></script>
   <script src="{% static 'network/home.js' %}"></script>
-  <script src="{% static 'network/delete.js' %}"></script>
+  <script src="{% static 'network/delete.js' %}"></script>  
 {% endblock %}

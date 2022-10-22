@@ -1,24 +1,47 @@
 document.addEventListener('DOMContentLoaded', function() {
     getPencils()
+
 });
 
 function getPencils() {
     const pencils = document.querySelectorAll(".pencil")
     
-    for (let i=0; i <pencils.length; i++) {
+    for (let i=0; i < pencils.length; i++) {
+        post_id = parseInt((pencils[i].dataset.id))
+        addTextRemaining(post_id)
         pencils[i].addEventListener("click", () => showForm(parseInt(pencils[i].dataset.id)))
     }
 }
 
-function showForm(post_id) {
-    console.log(post_id)
+function addTextRemaining(post_id) {
+    // remaining text
+    const postTextArea = document.getElementById(`textarea-${post_id}`);
+    const remainingChars = document.getElementById(`remaining-chars-${post_id}`);
+    const MAX_CHARS = 280;
 
+    postTextArea.addEventListener("input", () => {
+        const remaining = MAX_CHARS - postTextArea.value.length;
+        remainingChars.textContent = `${remaining} characters remaining`;
+    })
+}
+
+function showForm(post_id) {
     // when clicked, get post content, hide content div and show textarea div & prepopulate text box with post content
     post_content = document.querySelector(`#post-content-${post_id}`).innerHTML;
     document.querySelector(`#textarea-${post_id}`).innerHTML = post_content;
 
     document.querySelector(`#post-content-div-${post_id}`).style.display = 'none';
     document.querySelector(`#edit-content-div-${post_id}`).style.display = 'block';
+
+    // set remaining chars
+    const postTextArea = document.getElementById(`textarea-${post_id}`);
+    const remainingChars = document.getElementById(`remaining-chars-${post_id}`);
+    const MAX_CHARS = 280;
+
+    const remaining = MAX_CHARS - postTextArea.value.length;
+    remainingChars.innerHTML = `${remaining} characters remaining`;
+
+    console.log(post_id)
 
     // add event listener on save edits button and submit post req
     document.querySelector(`#save-edit-btn-${post_id}`).addEventListener('click', () => {
@@ -55,7 +78,6 @@ function showForm(post_id) {
         document.querySelector(`#edit-content-div-${post_id}`).style.display = 'none';
 
     });
-
 }
 
 function getCookie(name) {

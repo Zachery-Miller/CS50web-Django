@@ -7,13 +7,17 @@
 
         <div id="profile-section">
             <h2 id="profile-user">{{ profile_user.username }}</h2>
-            <div>
-                <h4>Followers</h4>
-                <h4 id="follower-count">{{ followers }}</h4>
+            <div id="posts-div" class="prf-follow-div">
+                <span id="posts-count">{{ post_count }}</span>
+                <span>posts</span>
             </div>
-            <div>
-                <h4>Following</h4>
-                <h4 id="following-count">{{ following }}</h4>
+            <div id="followers-div" class="prf-follow-div">
+                <span id="follower-count">{{ followers }}</span>
+                <span>followers</span>
+            </div>
+            <div id="following-div" class="prf-follow-div">
+                <span id="following-count">{{ following }}</span>
+                <span>following</span>
             </div>
             
             {% if user.is_authenticated %}
@@ -45,6 +49,7 @@
                   </div>
                   <div id="edit-content-div-{{ post.id }}" style="display:none">
                     <textarea id="textarea-{{ post.id }}" class="form-control" rows="3" maxlength="280"></textarea>
+                    <div id="remaining-chars-{{ post.id }}" class="remaining-char-label">280 characters remaining</div>
                     <div class="post-edit-div">
                       <button id="save-edit-btn-{{ post.id }}" class="btn btn-primary">Save Edits</button>
                       <button id="cancel-edit-btn-{{ post.id }}" class="btn btn-secondary">Cancel</button>

@@ -131,7 +131,7 @@ def profile_page(request, profile_user_username):
     followed_by_count = Follow.objects.filter(following=profile_user).count()
     posts = Post.objects.filter(poster=profile_user).order_by('-time_posted')
     serialized_posts = get_serialized(request, posts)
-
+    post_count = len(posts)
     # set up pagination
     page_obj = set_pagination(request, serialized_posts)
 
@@ -139,7 +139,8 @@ def profile_page(request, profile_user_username):
         "profile_user": profile_user,
         "following": following_count,
         "followers": followed_by_count,
-        "posts": page_obj
+        "posts": page_obj,
+        "post_count": post_count
     })
 
 def follow(request, profile_user_username):
