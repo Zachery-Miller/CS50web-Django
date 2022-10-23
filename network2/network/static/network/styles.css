@@ -7,6 +7,10 @@ html {
     background-color: #fafafa;
 }
 
+body.preload *{
+    animation-duration: 0s !important;
+}
+
 #follow-form {
     display: none;
 }
@@ -143,4 +147,42 @@ h4 {
     margin-bottom: 7px;
     color: #ff5500;
     font-weight: bold;
+}
+
+.fa-heart {
+    animation: anim_liked 0.2s ease-in-out;
+}
+
+.fa-heart-o {
+    animation: anim_unliked 0.2s ease-in-out;
+}
+
+@keyframes anim_liked {
+    0% {
+        font-size: 24px;
+    }
+
+    50% {
+        font-size: 30px;
+    }
+
+    100% {
+        font-size: 24px;
+    }
+
+}
+
+@keyframes anim_unliked {
+    0% {
+        font-size: 24px;
+    }
+
+    50% {
+        font-size: 30px;
+    }
+
+    100% {
+        font-size: 24px;
+    }
+
 }

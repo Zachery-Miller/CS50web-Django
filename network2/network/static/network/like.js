@@ -1,11 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     getHearts()
+    
+    // preload class sets all animation durations to 0s so no animations run on page load, after 0.3s animations can run
+    setTimeout(() => {
+        document.body.classList.remove("preload")
+    },300)
 });
 
 function getHearts() {
     const hearts = document.querySelectorAll(".heart")
     
     for (let i=0; i <hearts.length; i++) {
+        hearts[i].style.animationPlayState = 'paused';
         hearts[i].addEventListener("click", () => submitForm(parseInt(hearts[i].dataset.id)))
     }
 }
@@ -29,11 +35,17 @@ function submitForm(post_id) {
             like_count -= 1;
             document.querySelector(`#like-count-${post_id}`).innerHTML = like_count;
 
-            // edit button display
+            // edit button display and animation playstate
             like_button = document.querySelector(`#liked-${post_id}`)
             like_button.classList.remove("fa-heart")
             like_button.classList.add("fa-heart-o")
             like_button.style = "font-size:24px";
+
+            // animation
+            like_button.animationPlayState = 'running';
+
+            // then repause
+            like_button.animationPlayState = 'paused';
 
             console.log(message);
         }
@@ -47,6 +59,12 @@ function submitForm(post_id) {
             like_button.classList.remove("fa-heart-o")
             like_button.classList.add("fa-heart")
             like_button.style = "font-size:24px;color:red";
+
+            // animation
+            like_button.animationPlayState = 'running';
+
+            // then repause
+            like_button.animationPlayState = 'paused';
 
             console.log(message);
         }
